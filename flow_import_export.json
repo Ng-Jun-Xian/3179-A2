@@ -1,0 +1,248 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 1000,
+  "height": 650,
+  "background": "#FAFAF8",
+  "title": {
+    "text": "Global Coffee Trade Flow Network (1990-2019)",
+    "subtitle": "Top 10 coffee exporters and importers by total trade volume",
+    "fontSize": 22,
+    "fontWeight": 600,
+    "anchor": "middle",
+    "color": "#2C3E50",
+    "subtitleFontSize": 14,
+    "subtitleColor": "#2C3E50",
+    "offset": 20
+  },
+  "data": {"url": "Coffee_export.csv"},
+  "transform": [
+    {
+      "calculate": "toNumber(datum.Total_export)",
+      "as": "Total_export_num"
+    },
+    {
+      "filter": "isValid(datum.Total_export_num) && datum.Total_export_num > 0"
+    },
+    {
+      "window": [{"op": "dense_rank", "as": "export_rank"}],
+      "sort": [{"field": "Total_export_num", "order": "descending"}]
+    },
+    {
+      "filter": "datum.export_rank <= 10"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {"type": "rule", "strokeCap": "round", "opacity": 0.6},
+      "encoding": {
+        "x": {"datum": 1.5, "type": "quantitative", "scale": {"domain": [0, 9]}, "axis": null},
+        "y": {
+          "field": "export_rank",
+          "type": "quantitative",
+          "scale": {"domain": [0.5, 10.5], "reverse": true},
+          "axis": null
+        },
+        "x2": {"datum": 4.5},
+        "y2": {"datum": 5.5},
+        "strokeWidth": {"field": "Total_export_num", "type": "quantitative", "scale": {"type": "sqrt", "range": [3, 50]}, "legend": null},
+        "color": {"value": "#D4915D"},
+        "tooltip": [
+          {"field": "Country", "title": "Exporter"},
+          {"field": "Total_export_num", "title": "Total Exports (kg)", "format": ",.0f"},
+          {"field": "export_rank", "title": "Rank"}
+        ]
+      }
+    },
+    {
+      "data": {"url": "Coffee_import.csv"},
+      "transform": [
+        {
+          "calculate": "toNumber(datum.Total_import)",
+          "as": "Total_import_num"
+        },
+        {
+          "filter": "isValid(datum.Total_import_num) && datum.Total_import_num > 0"
+        },
+        {
+          "window": [{"op": "dense_rank", "as": "import_rank"}],
+          "sort": [{"field": "Total_import_num", "order": "descending"}]
+        },
+        {
+          "filter": "datum.import_rank <= 10"
+        }
+      ],
+      "mark": {"type": "rule", "strokeCap": "round", "opacity": 0.6},
+      "encoding": {
+        "x": {"datum": 4.5, "type": "quantitative", "axis": null},
+        "y": {"datum": 5.5, "type": "quantitative", "axis": null},
+        "x2": {"datum": 7.5},
+        "y2": {
+          "field": "import_rank",
+          "type": "quantitative",
+          "scale": {"reverse": true}
+        },
+        "strokeWidth": {"field": "Total_import_num", "type": "quantitative", "scale": {"type": "sqrt", "range": [3, 50]}, "legend": null},
+        "color": {"value": "#5DADE2"},
+        "tooltip": [
+          {"field": "Country", "title": "Importer"},
+          {"field": "Total_import_num", "title": "Total Imports (kg)", "format": ",.0f"},
+          {"field": "import_rank", "title": "Rank"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "circle", "opacity": 0.9, "stroke": "#FFFFFF", "strokeWidth": 2, "size": 600},
+      "encoding": {
+        "x": {"datum": 1.5, "type": "quantitative"},
+        "y": {
+          "field": "export_rank",
+          "type": "quantitative",
+          "scale": {"reverse": true}
+        },
+        "color": {"value": "#D4915D"},
+        "tooltip": [
+          {"field": "Country", "title": "Exporter"},
+          {"field": "Total_export_num", "title": "Total Exports (kg)", "format": ",.0f"},
+          {"field": "export_rank", "title": "Rank"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "text", "fontSize": 13, "fontWeight": 500, "align": "right", "dx": -5},
+      "encoding": {
+        "x": {"datum": 1.2, "type": "quantitative"},
+        "y": {
+          "field": "export_rank",
+          "type": "quantitative",
+          "scale": {"reverse": true}
+        },
+        "text": {"field": "Country", "type": "nominal"},
+        "color": {"value": "#000000"}
+      }
+    },
+    {
+      "data": {"url": "Coffee_import.csv"},
+      "transform": [
+        {
+          "calculate": "toNumber(datum.Total_import)",
+          "as": "Total_import_num"
+        },
+        {
+          "filter": "isValid(datum.Total_import_num) && datum.Total_import_num > 0"
+        },
+        {
+          "window": [{"op": "dense_rank", "as": "import_rank"}],
+          "sort": [{"field": "Total_import_num", "order": "descending"}]
+        },
+        {
+          "filter": "datum.import_rank <= 10"}
+      ],
+      "mark": {"type": "circle", "opacity": 0.9, "stroke": "#FFFFFF", "strokeWidth": 2, "size": 600},
+      "encoding": {
+        "x": {"datum": 7.5, "type": "quantitative"},
+        "y": {
+          "field": "import_rank",
+          "type": "quantitative",
+          "scale": {"reverse": true}
+        },
+        "color": {"value": "#5DADE2"},
+        "tooltip": [
+          {"field": "Country", "title": "Importer"},
+          {"field": "Total_import_num", "title": "Total Imports (kg)", "format": ",.0f"},
+          {"field": "import_rank", "title": "Rank"}
+        ]
+      }
+    },
+    {
+      "data": {"url": "Coffee_import.csv"},
+      "transform": [
+        {
+          "calculate": "toNumber(datum.Total_import)",
+          "as": "Total_import_num"
+        },
+        {
+          "filter": "isValid(datum.Total_import_num) && datum.Total_import_num > 0"
+        },
+        {
+          "window": [{"op": "dense_rank", "as": "import_rank"}],
+          "sort": [{"field": "Total_import_num", "order": "descending"}]
+        },
+        {
+          "filter": "datum.import_rank <= 10"}
+      ],
+      "mark": {"type": "text", "fontSize": 13, "fontWeight": 500, "align": "left", "dx": 5},
+      "encoding": {
+        "x": {"datum": 7.8, "type": "quantitative"},
+        "y": {
+          "field": "import_rank",
+          "type": "quantitative",
+          "scale": {"reverse": true}
+        },
+        "text": {"field": "Country", "type": "nominal"},
+        "color": {"value": "#000000"}
+      }
+    },
+    {
+      "data": {"values": [{"x": 1.2, "y": 0.3}]},
+      "mark": {"type": "point", "shape": "triangle-right", "opacity": 0.8, "size": 1500},
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "color": {"value": "#D4915D"}
+      }
+    },
+    {
+      "data": {"values": [{"label": "COFFEE EXPORTERS", "x": 0.8, "y": 0.1}]},
+      "mark": {"type": "text", "fontSize": 15, "fontWeight": 700, "letterSpacing": 1},
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "label", "type": "nominal"},
+        "color": {"value": "#000000"}
+      }
+    },
+    {
+      "data": {"values": [{"x": 4.5, "y": 5.5}]},
+      "mark": {"type": "circle", "opacity": 1, "stroke": "#34495E", "strokeWidth": 4, "size": 4000},
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "color": {"value": "#ECF0F1"},
+        "tooltip": {"value": "☕ Global Coffee Market - Centralized trading hub"}
+      }
+    },
+    {
+      "data": {"values": [{"label": "☕ GLOBAL MARKET", "x": 4.5, "y": 11.0}]},
+      "mark": {"type": "text", "fontSize": 14, "fontWeight": 700},
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "label", "type": "nominal"},
+        "color": {"value": "#000000"}
+      }
+    },
+    {
+      "data": {"values": [{"x": 7.8, "y": 0.3}]},
+      "mark": {"type": "point", "shape": "triangle-left", "opacity": 0.8, "size": 1500},
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "color": {"value": "#5DADE2"}
+      }
+    },
+    {
+      "data": {"values": [{"label": "COFFEE IMPORTERS", "x": 8.1, "y": 0.1}]},
+      "mark": {"type": "text", "fontSize": 15, "fontWeight": 700, "letterSpacing": 1},
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "label", "type": "nominal"},
+        "color": {"value": "#000000"}
+      }
+    }
+  ],
+  "config": {
+    "view": {"stroke": null},
+    "font": "Inter, system-ui, -apple-system, sans-serif"
+  }
+}

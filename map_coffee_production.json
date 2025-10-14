@@ -1,0 +1,117 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 900,
+  "height": 500,
+  "title": {
+    "text": "Global Coffee Production (1990-2020)",
+    "subtitle": "Circle size represents total production volume",
+    "fontSize": 16,
+    "anchor": "start",
+    "color": "#333"
+  },
+  "projection": {"type": "equalEarth"},
+  "layer": [
+    { 
+      "data": {"sphere": true},
+      "mark": {"type": "geoshape", "fill": "lightblue", "stroke": "steelblue", "strokeWidth": 1}
+    },
+    { 
+      "data": {"graticule": {"step": [30, 30]}},
+      "mark": {"type": "geoshape", "fill": null, "stroke": "#666666", "strokeWidth": 0.5, "strokeOpacity": 0.5}
+    },
+    {
+      "data": {
+        "url": "ne_10m_admin_0_countries.json",
+        "format": {"type": "topojson", "feature": "world_countries"}
+      },
+      "mark": {"type": "geoshape", "fill": "#e8e8e8", "stroke": "white", "strokeWidth": 0.5}
+    },
+    {
+      "data": {
+        "url": "ne_10m_admin_0_countries.json",
+        "format": {"type": "topojson", "feature": "world_countries"}
+      },
+      "transform": [
+        {
+          "calculate": "datum.properties.NAME == 'Bolivia' ? 'Bolivia (Plurinational State of)' : datum.properties.NAME == 'Vietnam' ? 'Viet Nam' : datum.properties.NAME == 'Laos' ? 'Lao People\\'s Democratic Republic' : datum.properties.NAME == 'Ivory Coast' ? 'Côte d\\'Ivoire' : datum.properties.NAME == 'Dem. Rep. Congo' ? 'Democratic Republic of Congo' : datum.properties.NAME == 'Dominican Rep.' ? 'Dominican Republic' : datum.properties.NAME == 'Eq. Guinea' ? 'Equatorial Guinea' : datum.properties.NAME == 'Central African Rep.' ? 'Central African Republic' : datum.properties.NAME == 'Timor' ? 'Timor-Leste' : datum.properties.NAME == 'Trinidad and Tobago' ? 'Trinidad & Tobago' : datum.properties.NAME",
+          "as": "Country_Normalized"
+        },
+        {
+          "lookup": "Country_Normalized",
+          "from": {
+            "data": {"url": "Coffee_production.csv"},
+            "key": "Country",
+            "fields": ["Total_production"]
+          }
+        },
+        {"filter": "datum.Total_production != null"}
+      ],
+      "mark": {"type": "geoshape", "fill": "#C7E9C0", "stroke": "white", "strokeWidth": 0.5}
+    },
+    {
+      "data": {"url": "Coffee_production.csv"},
+      "transform": [
+        {
+          "calculate": "datum.Total_production / 1000000000",
+          "as": "Production_Billions"
+        },
+        {
+          "calculate": "datum['Coffee type'] == 'Robusta/Arabica' ? 'Arabica/Robusta' : datum['Coffee type']",
+          "as": "Coffee_Type_Normalized"
+        },
+        {
+          "calculate": "datum.Country == 'Brazil' ? -47.9 : datum.Country == 'Viet Nam' ? 108.3 : datum.Country == 'Colombia' ? -74.3 : datum.Country == 'Indonesia' ? 113.9 : datum.Country == 'Ethiopia' ? 40.5 : datum.Country == 'Honduras' ? -87.2 : datum.Country == 'India' ? 78.5 : datum.Country == 'Uganda' ? 32.3 : datum.Country == 'Mexico' ? -102.6 : datum.Country == 'Guatemala' ? -90.2 : datum.Country == 'Peru' ? -75.0 : datum.Country == 'Nicaragua' ? -85.2 : datum.Country == 'Kenya' ? 37.9 : datum.Country == 'Costa Rica' ? -84.1 : datum.Country == 'Papua New Guinea' ? 143.9 : datum.Country == 'Tanzania' ? 34.9 : datum.Country == 'El Salvador' ? -88.9 : datum.Country == 'Cameroon' ? 12.4 : datum.Country == 'Lao People\\'s Democratic Republic' ? 102.5 : datum.Country == 'Ecuador' ? -78.2 : datum.Country == 'Thailand' ? 100.5 : datum.Country == 'Venezuela' ? -66.6 : datum.Country == 'Democratic Republic of Congo' ? 23.7 : datum.Country == 'Madagascar' ? 46.9 : datum.Country == 'Côte d\\'Ivoire' ? -5.5 : datum.Country == 'Burundi' ? 29.9 : datum.Country == 'Philippines' ? 122.0 : datum.Country == 'Rwanda' ? 30.1 : datum.Country == 'Haiti' ? -72.3 : datum.Country == 'Dominican Republic' ? -70.2 : datum.Country == 'Guinea' ? -10.9 : datum.Country == 'Cuba' ? -77.8 : datum.Country == 'Angola' ? 17.9 : datum.Country == 'Panama' ? -80.1 : datum.Country == 'Jamaica' ? -77.3 : datum.Country == 'Bolivia (Plurinational State of)' ? -63.6 : datum.Country == 'Togo' ? 1.2 : datum.Country == 'Sri Lanka' ? 80.8 : datum.Country == 'Paraguay' ? -58.4 : datum.Country == 'Sierra Leone' ? -11.8 : datum.Country == 'Malawi' ? 34.3 : datum.Country == 'Central African Republic' ? 20.9 : datum.Country == 'Zimbabwe' ? 29.2 : datum.Country == 'Zambia' ? 27.8 : datum.Country == 'Ghana' ? -1.0 : datum.Country == 'Timor-Leste' ? 125.6 : datum.Country == 'Liberia' ? -9.4 : datum.Country == 'Congo' ? 15.8 : datum.Country == 'Nigeria' ? 8.7 : datum.Country == 'Trinidad & Tobago' ? -61.5 : datum.Country == 'Guyana' ? -58.9 : datum.Country == 'Equatorial Guinea' ? 10.3 : datum.Country == 'Gabon' ? 11.6 : datum.Country == 'Nepal' ? 84.1 : datum.Country == 'Yemen' ? 48.5 : null",
+          "as": "lon"
+        },
+        {
+          "calculate": "datum.Country == 'Brazil' ? -10.3 : datum.Country == 'Viet Nam' ? 14.1 : datum.Country == 'Colombia' ? 4.6 : datum.Country == 'Indonesia' ? -2.5 : datum.Country == 'Ethiopia' ? 9.0 : datum.Country == 'Honduras' ? 14.8 : datum.Country == 'India' ? 22.3 : datum.Country == 'Uganda' ? 1.4 : datum.Country == 'Mexico' ? 23.6 : datum.Country == 'Guatemala' ? 15.8 : datum.Country == 'Peru' ? -9.2 : datum.Country == 'Nicaragua' ? 12.9 : datum.Country == 'Kenya' ? 0.2 : datum.Country == 'Costa Rica' ? 10.0 : datum.Country == 'Papua New Guinea' ? -6.3 : datum.Country == 'Tanzania' ? -6.4 : datum.Country == 'El Salvador' ? 13.8 : datum.Country == 'Cameroon' ? 5.7 : datum.Country == 'Lao People\\'s Democratic Republic' ? 18.2 : datum.Country == 'Ecuador' ? -1.8 : datum.Country == 'Thailand' ? 15.9 : datum.Country == 'Venezuela' ? 6.4 : datum.Country == 'Democratic Republic of Congo' ? -2.9 : datum.Country == 'Madagascar' ? -18.9 : datum.Country == 'Côte d\\'Ivoire' ? 7.5 : datum.Country == 'Burundi' ? -3.4 : datum.Country == 'Philippines' ? 12.9 : datum.Country == 'Rwanda' ? -1.9 : datum.Country == 'Haiti' ? 18.9 : datum.Country == 'Dominican Republic' ? 18.7 : datum.Country == 'Guinea' ? 9.9 : datum.Country == 'Cuba' ? 21.5 : datum.Country == 'Angola' ? -11.2 : datum.Country == 'Panama' ? 8.5 : datum.Country == 'Jamaica' ? 18.1 : datum.Country == 'Bolivia (Plurinational State of)' ? -16.3 : datum.Country == 'Togo' ? 8.6 : datum.Country == 'Sri Lanka' ? 7.9 : datum.Country == 'Paraguay' ? -23.4 : datum.Country == 'Sierra Leone' ? 8.5 : datum.Country == 'Malawi' ? -13.3 : datum.Country == 'Central African Republic' ? 6.6 : datum.Country == 'Zimbabwe' ? -19.0 : datum.Country == 'Zambia' ? -13.1 : datum.Country == 'Ghana' ? 7.9 : datum.Country == 'Timor-Leste' ? -8.6 : datum.Country == 'Liberia' ? 6.4 : datum.Country == 'Congo' ? -0.2 : datum.Country == 'Nigeria' ? 9.1 : datum.Country == 'Trinidad & Tobago' ? 10.7 : datum.Country == 'Guyana' ? 4.9 : datum.Country == 'Equatorial Guinea' ? 1.7 : datum.Country == 'Gabon' ? -0.8 : datum.Country == 'Nepal' ? 28.4 : datum.Country == 'Yemen' ? 15.6 : null",
+          "as": "lat"
+        },
+        {"filter": "datum.lon != null && datum.lat != null"}
+      ],
+      "mark": {
+        "type": "circle",
+        "opacity": 0.85,
+        "stroke": "#000",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "size": {
+          "field": "Production_Billions",
+          "type": "quantitative",
+          "title": "Production (billion kg)",
+          "scale": {"type": "sqrt", "domain": [0, 80], "range": [50, 3000]},
+          "legend": {
+            "orient": "bottom-left",
+            "format": ".1f",
+            "offset": 10,
+            "direction": "vertical"
+          }
+        },
+        "color": {
+          "field": "Coffee_Type_Normalized",
+          "type": "nominal",
+          "title": "Coffee Type",
+          "scale": {
+            "domain": ["Arabica", "Robusta", "Arabica/Robusta"],
+            "range": ["#FFD700", "#377EB8", "#4DAF4A"]
+          },
+          "legend": {
+            "orient": "top-left",
+            "offset": 10,
+            "direction": "vertical"
+          }
+        },
+        "tooltip": [
+          {"field": "Country", "title": "Country"},
+          {"field": "Coffee_Type_Normalized", "title": "Coffee Type"},
+          {"field": "Production_Billions", "title": "Production (billion kg)", "format": ".2f"},
+          {"field": "Total_production", "title": "Total (kg)", "format": ","}
+        ]
+      }
+    }
+  ],
+  "config": {"view": {"stroke": null}}
+}

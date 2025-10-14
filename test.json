@@ -1,0 +1,235 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "GDP vs Coffee Consumption Rankings (2019)",
+    "subtitle": "Countries with complete data - Connecting lines show relationship between economic size and coffee consumption",
+    "fontSize": 16,
+    "subtitleFontSize": 12
+  },
+  "width": 600,
+  "height": 450,
+  "data": {
+    "values": [
+      {"Country": "United States", "GDP_Rank": 1, "Coffee_Rank": 1},
+      {"Country": "China", "GDP_Rank": 2, "Coffee_Rank": null},
+      {"Country": "Japan", "GDP_Rank": 3, "Coffee_Rank": 4},
+      {"Country": "Germany", "GDP_Rank": 4, "Coffee_Rank": 7},
+      {"Country": "India", "GDP_Rank": 5, "Coffee_Rank": 10},
+      {"Country": "United Kingdom", "GDP_Rank": 6, "Coffee_Rank": 6},
+      {"Country": "France", "GDP_Rank": 7, "Coffee_Rank": 8},
+      {"Country": "Italy", "GDP_Rank": 8, "Coffee_Rank": 9},
+      {"Country": "Brazil", "GDP_Rank": 9, "Coffee_Rank": 2},
+      {"Country": "Canada", "GDP_Rank": 10, "Coffee_Rank": null},
+      {"Country": "Indonesia", "GDP_Rank": null, "Coffee_Rank": 3},
+      {"Country": "Vietnam", "GDP_Rank": null, "Coffee_Rank": 5}
+    ]
+  },
+  "transform": [
+    {
+      "filter": "datum.GDP_Rank != null && datum.Coffee_Rank != null"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 2,
+        "opacity": 0.6
+      },
+      "encoding": {
+        "x": {
+          "field": "Category",
+          "type": "nominal",
+          "axis": {
+            "title": null,
+            "labelAngle": 0,
+            "labelFontSize": 13,
+            "labelFontWeight": "bold",
+            "labelPadding": 15,
+            "domain": false,
+            "ticks": false
+          }
+        },
+        "y": {
+          "field": "Rank",
+          "type": "quantitative",
+          "scale": {"domain": [0, 11], "reverse": true},
+          "axis": null
+        },
+        "color": {
+          "field": "Country",
+          "type": "nominal",
+          "legend": null
+        },
+        "detail": {"field": "Country"}
+      },
+      "transform": [
+        {
+          "fold": ["GDP_Rank", "Coffee_Rank"],
+          "as": ["Category", "Rank"]
+        },
+        {
+          "calculate": "datum.Category == 'GDP_Rank' ? 'GDP Rank' : 'Coffee Consumption Rank'",
+          "as": "Category"
+        }
+      ]
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 150
+      },
+      "encoding": {
+        "x": {
+          "field": "Category",
+          "type": "nominal"
+        },
+        "y": {
+          "field": "Rank",
+          "type": "quantitative",
+          "scale": {"domain": [0, 11], "reverse": true},
+          "axis": null
+        },
+        "color": {
+          "field": "Country",
+          "type": "nominal"
+        },
+        "tooltip": [
+          {"field": "Country", "type": "nominal"},
+          {"field": "Category", "type": "nominal"},
+          {"field": "Rank", "type": "quantitative", "title": "Rank"}
+        ]
+      },
+      "transform": [
+        {
+          "fold": ["GDP_Rank", "Coffee_Rank"],
+          "as": ["Category", "Rank"]
+        },
+        {
+          "calculate": "datum.Category == 'GDP_Rank' ? 'GDP Rank' : 'Coffee Consumption Rank'",
+          "as": "Category"
+        }
+      ]
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -12,
+        "fontSize": 11,
+        "fontWeight": "normal"
+      },
+      "encoding": {
+        "x": {
+          "field": "Category",
+          "type": "nominal"
+        },
+        "y": {
+          "field": "Rank",
+          "type": "quantitative",
+          "scale": {"domain": [0, 11], "reverse": true},
+          "axis": null
+        },
+        "text": {"field": "Country"},
+        "color": {"value": "black"},
+        "opacity": {
+          "condition": {
+            "test": "datum.Category == 'Coffee Consumption Rank'",
+            "value": 1
+          },
+          "value": 0
+        }
+      },
+      "transform": [
+        {
+          "fold": ["GDP_Rank", "Coffee_Rank"],
+          "as": ["Category", "Rank"]
+        },
+        {
+          "calculate": "datum.Category == 'GDP_Rank' ? 'GDP Rank' : 'Coffee Consumption Rank'",
+          "as": "Category"
+        }
+      ]
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 12,
+        "fontSize": 11,
+        "fontWeight": "normal"
+      },
+      "encoding": {
+        "x": {
+          "field": "Category",
+          "type": "nominal"
+        },
+        "y": {
+          "field": "Rank",
+          "type": "quantitative",
+          "scale": {"domain": [0, 11], "reverse": true},
+          "axis": null
+        },
+        "text": {"field": "Country"},
+        "color": {"value": "black"},
+        "opacity": {
+          "condition": {
+            "test": "datum.Category == 'GDP Rank'",
+            "value": 1
+          },
+          "value": 0
+        }
+      },
+      "transform": [
+        {
+          "fold": ["GDP_Rank", "Coffee_Rank"],
+          "as": ["Category", "Rank"]
+        },
+        {
+          "calculate": "datum.Category == 'GDP_Rank' ? 'GDP Rank' : 'Coffee Consumption Rank'",
+          "as": "Category"
+        }
+      ]
+    },
+    {
+      "data": {
+        "values": [
+          {"label": "(Ranked 1-10)", "x": "Coffee Consumption Rank", "y": 11.5}
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 10,
+        "fontStyle": "italic",
+        "color": "gray"
+      },
+      "encoding": {
+        "x": {"field": "x", "type": "nominal"},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "label"}
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {"label": "(Ranked 1-10)", "x": "GDP Rank", "y": 11.5}
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 10,
+        "fontStyle": "italic",
+        "color": "gray"
+      },
+      "encoding": {
+        "x": {"field": "x", "type": "nominal"},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "label"}
+      }
+    }
+  ],
+  "config": {
+    "view": {"stroke": null}
+  }
+}

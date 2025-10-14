@@ -1,0 +1,76 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 450,
+  "title": {
+    "text": "Coffee Import Evolution (1990-2019)",
+    "subtitle": "Top 5 importers - US dominance and Germany's steady growth",
+    "fontSize": 20,
+    "fontWeight": 600,
+    "color": "#2C3E50"
+  },
+  "data": {"url": "Coffee_import.csv"},
+  "transform": [
+    {
+      "filter": "indexof(['United States', 'Germany', 'Italy', 'Japan', 'France'], datum.Country) >= 0"
+    },
+    {
+      "fold": ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"],
+      "as": ["Year", "Imports"]
+    },
+    {
+      "calculate": "toNumber(datum.Imports)",
+      "as": "Imports_num"
+    },
+    {
+      "calculate": "datum.Imports_num < 0 ? null : datum.Imports_num / 1000000000",
+      "as": "Imports_Billions"
+    },
+    {
+      "filter": "datum.Imports_Billions != null"
+    }
+  ],
+  "mark": {
+    "type": "line",
+    "point": {"filled": true, "size": 80},
+    "strokeWidth": 3,
+    "interpolate": "monotone"
+  },
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "ordinal",
+      "title": "Year",
+      "axis": {"labelAngle": -45, "labelFontSize": 11}
+    },
+    "y": {
+      "field": "Imports_Billions",
+      "type": "quantitative",
+      "title": "Imports (Billion kg)",
+      "scale": {"zero": true}
+    },
+    "color": {
+      "field": "Country",
+      "type": "nominal",
+      "scale": {
+        "domain": ["United States", "Germany", "Italy", "Japan", "France"],
+        "range": ["#3498DB", "#E74C3C", "#2ECC71", "#F39C12", "#9B59B6"]
+      },
+      "legend": {
+        "title": "Country",
+        "titleFontSize": 13,
+        "labelFontSize": 12,
+        "orient": "right"
+      }
+    },
+    "tooltip": [
+      {"field": "Country", "title": "Country"},
+      {"field": "Year", "title": "Year"},
+      {"field": "Imports_Billions", "title": "Imports (Billion kg)", "format": ".2f"}
+    ]
+  },
+  "config": {
+    "view": {"stroke": null},
+    "font": "Inter, system-ui, -apple-system, sans-serif"
+  }
+}

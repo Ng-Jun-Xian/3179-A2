@@ -1,0 +1,54 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Coffee Consumption by Type - Radial View (2019)",
+    "subtitle": "Domestic Producers Only - Each arc segment represents a country's consumption",
+    "anchor": "middle"
+  },
+  "data": {
+    "url": "Coffee_consumption_per_capita.csv"
+  },
+  "transform": [
+    {
+      "filter": "datum['Coffee type'] != null && datum['Coffee type'] != ''"
+    },
+    {"filter": "datum.Year == 2019"},
+    {
+      "calculate": "datum['Coffee type'] == 'Robusta/Arabica' ? 'Arabica/Robusta' : datum['Coffee type'] == 'Arabica/Robusta' ? 'Arabica/Robusta' : datum['Coffee type']",
+      "as": "Coffee_Type_Simple"
+    },
+    {
+      "window": [{"op": "rank", "as": "rank"}],
+      "groupby": ["Coffee_Type_Simple"]
+    }
+  ],
+  "width": 500,
+  "height": 500,
+  "mark": {"type": "arc", "innerRadius": 50, "stroke": "white"},
+  "encoding": {
+    "theta": {
+      "field": "Consumption_Per_Capita_kg",
+      "type": "quantitative",
+      "stack": true
+    },
+    "radius": {
+      "field": "Consumption_Per_Capita_kg",
+      "type": "quantitative",
+      "scale": {"type": "sqrt", "zero": true, "rangeMin": 50}
+    },
+    "color": {
+      "field": "Coffee_Type_Simple",
+      "type": "nominal",
+      "scale": {
+       "domain": ["Arabica", "Robusta", "Arabica/Robusta"],
+       "range": ["#FFD700", "#377EB8", "#4DAF4A"]
+      },
+      "legend": {"title": "Coffee Type (Domestic)"}
+    },
+    "tooltip": [
+      {"field": "Country", "type": "nominal"},
+      {"field": "Coffee_Type_Simple", "type": "nominal", "title": "Coffee Type"},
+      {"field": "Consumption_Per_Capita_kg", "type": "quantitative", "title": "Per Capita (kg)", "format": ".2f"}
+    ]
+  }
+}

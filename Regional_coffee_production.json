@@ -1,0 +1,92 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 400,
+  "title": {
+    "text": "Regional Coffee Production Evolution (1990-2020)",
+    "subtitle": "Stacked area showing shifts in global coffee production by region",
+    "fontSize": 16,
+    "anchor": "start",
+    "color": "#333"
+  },
+  "data": {
+    "url": "Coffee_production.csv"
+  },
+  "transform": [
+    {
+      "calculate": "indexof(['Brazil', 'Colombia', 'Peru', 'Ecuador', 'Bolivia (Plurinational State of)', 'Costa Rica', 'Dominican Republic', 'El Salvador', 'Guatemala', 'Haiti', 'Honduras', 'Jamaica', 'Mexico', 'Nicaragua', 'Panama', 'Paraguay', 'Venezuela', 'Cuba', 'Guyana', 'Trinidad & Tobago'], datum.Country) >= 0 ? 'Americas' : indexof(['Ethiopia', 'Kenya', 'Uganda', 'Tanzania', 'Rwanda', 'Burundi', 'Cameroon', 'Central African Republic', 'Congo', 'Democratic Republic of Congo', 'Côte d\\'Ivoire', 'Equatorial Guinea', 'Gabon', 'Ghana', 'Guinea', 'Liberia', 'Madagascar', 'Malawi', 'Nigeria', 'Sierra Leone', 'Togo', 'Zambia', 'Zimbabwe', 'Angola'], datum.Country) >= 0 ? 'Africa' : indexof(['Viet Nam', 'Indonesia', 'India', 'Thailand', 'Philippines', 'Papua New Guinea', 'Lao People\\'s Democratic Republic', 'Sri Lanka', 'Nepal', 'Timor-Leste', 'Yemen'], datum.Country) >= 0 ? 'Asia-Pacific' : 'Other'",
+      "as": "Region"
+    },
+    {
+      "fold": [
+        "1990/91", "1991/92", "1992/93", "1993/94", "1994/95",
+        "1995/96", "1996/97", "1997/98", "1998/99", "1999/00",
+        "2000/01", "2001/02", "2002/03", "2003/04", "2004/05",
+        "2005/06", "2006/07", "2007/08", "2008/09", "2009/10",
+        "2010/11", "2011/12", "2012/13", "2013/14", "2014/15",
+        "2015/16", "2016/17", "2017/18", "2018/19", "2019/20"
+      ],
+      "as": ["Year", "Production"]
+    },
+    {
+      "calculate": "toNumber(split(datum.Year, '/')[0])",
+      "as": "YearNum"
+    },
+    {
+      "calculate": "datum.Production / 1000000000",
+      "as": "ProductionBillions"
+    },
+    {
+      "filter": "datum.ProductionBillions > 0 && isValid(datum.ProductionBillions)"
+    },
+    {
+      "aggregate": [
+        {"op": "sum", "field": "ProductionBillions", "as": "TotalProduction"}
+      ],
+      "groupby": ["Region", "YearNum"]
+    }
+  ],
+  "mark": {
+    "type": "area",
+    "line": true,
+    "point": false,
+    "opacity": 0.8
+  },
+  "encoding": {
+    "x": {
+      "field": "YearNum",
+      "type": "quantitative",
+      "title": "Year",
+      "scale": {"domain": [1990, 2020]},
+      "axis": {"format": "d", "tickCount": 10}
+    },
+    "y": {
+      "field": "TotalProduction",
+      "type": "quantitative",
+      "title": "Production (Billion kg)",
+      "stack": "zero"
+    },
+    "color": {
+      "field": "Region",
+      "type": "nominal",
+      "title": "Region",
+      "scale": {
+        "domain": ["Americas", "Asia-Pacific", "Africa"],
+        "range": ["#E69F00", "#56B4E9", "#009E73"]
+      },
+      "legend": {
+        "orient": "right",
+        "direction": "vertical"
+      }
+    },
+    "tooltip": [
+      {"field": "Region", "title": "Region"},
+      {"field": "YearNum", "title": "Year"},
+      {"field": "TotalProduction", "title": "Production (Billion kg)", "format": ".2f"}
+    ]
+  },
+  "config": {
+    "view": {"stroke": null},
+    "area": {"interpolate": "monotone"}
+  }
+}

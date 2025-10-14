@@ -1,0 +1,135 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Global Coffee Consumption Overview (1990-2019)",
+    "subtitle": "Average per capita consumption trend worldwide",
+    "anchor": "middle",
+    "fontSize": 18,
+    "fontWeight": "bold"
+  },
+  "data": {
+    "url": "Coffee_consumption_per_capita.csv"
+  },
+  "width": 800,
+  "height": 450,
+  "transform": [
+    {
+      "aggregate": [
+        {"op": "mean", "field": "Consumption_Per_Capita_kg", "as": "mean_consumption"}
+      ],
+      "groupby": ["Year"]
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 4,
+        "color": "#8B4513",
+        "point": {
+          "filled": true,
+          "size": 80,
+          "color": "#8B4513"
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "Year",
+          "type": "quantitative",
+          "title": "Year",
+          "axis": {
+            "format": "d",
+            "tickCount": 10,
+            "labelFontSize": 12,
+            "titleFontSize": 14
+          },
+          "scale": {"domain": [1990, 2019]}
+        },
+        "y": {
+          "field": "mean_consumption",
+          "type": "quantitative",
+          "title": "Average Consumption Per Capita (kg)",
+          "axis": {
+            "labelFontSize": 12,
+            "titleFontSize": 14
+          },
+          "scale": {"zero": false}
+        },
+        "tooltip": [
+          {"field": "Year", "type": "quantitative", "title": "Year"},
+          {"field": "mean_consumption", "type": "quantitative", "title": "Average Per Capita (kg)", "format": ".3f"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 10,
+        "dy": -10,
+        "fontSize": 14,
+        "fontWeight": "bold",
+        "color": "#8B4513"
+      },
+      "transform": [
+        {"filter": "datum.Year == 1990 || datum.Year == 2019"}
+      ],
+      "encoding": {
+        "x": {"field": "Year", "type": "quantitative"},
+        "y": {"field": "mean_consumption", "type": "quantitative"},
+        "text": {
+          "field": "mean_consumption",
+          "type": "quantitative",
+          "format": ".2f"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "rule",
+        "strokeDash": [8, 4],
+        "strokeWidth": 2,
+        "color": "#666666"
+      },
+      "transform": [
+        {
+          "aggregate": [
+            {"op": "mean", "field": "mean_consumption", "as": "overall_mean"}
+          ]
+        }
+      ],
+      "encoding": {
+        "y": {"field": "overall_mean", "type": "quantitative"},
+        "tooltip": [
+          {"field": "overall_mean", "type": "quantitative", "title": "30-Year Average (kg)", "format": ".3f"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -10,
+        "dy": -10,
+        "fontSize": 11,
+        "color": "#666666",
+        "text": "30-Year Average"
+      },
+      "transform": [
+        {
+          "aggregate": [
+            {"op": "mean", "field": "mean_consumption", "as": "overall_mean"}
+          ]
+        }
+      ],
+      "encoding": {
+        "x": {"datum": 2019},
+        "y": {"field": "overall_mean", "type": "quantitative"}
+      }
+    }
+  ],
+  "config": {
+    "view": {"strokeWidth": 0},
+    "axis": {"grid": true, "gridOpacity": 0.3}
+  }
+}
