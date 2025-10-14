@@ -40,7 +40,7 @@
           "axis": {
             "format": "d",
             "tickCount": 10,
-            "labelFontSize": 12,
+            "labelFontSize": 12,  
             "titleFontSize": 14
           },
           "scale": {"domain": [1990, 2019]}

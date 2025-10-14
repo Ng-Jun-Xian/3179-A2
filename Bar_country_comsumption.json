@@ -1,0 +1,49 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Average Coffee Consumption Per Capita (kg/person) Across All Years",
+  "width": 600,
+  "height": 500,
+  "data": {"url": "Coffee_consumption_per_capita.csv"},
+  "transform": [
+    {"filter": "datum.Consumption_Per_Capita_kg > 0"},
+    {
+      "aggregate": [
+        {"op": "mean", "field": "Consumption_Per_Capita_kg", "as": "avg_consumption"}
+      ],
+      "groupby": ["Country"]
+    },
+    {"window": [{"op": "rank", "as": "rank"}],
+     "sort": [{"field": "avg_consumption", "order": "descending"}]},
+    {"filter": "datum.rank <= 25"}
+  ],
+  "mark": "bar",
+  "encoding": {
+    "y": {
+      "field": "Country",
+      "type": "nominal",
+      "sort": "-x",
+      "title": null,
+      "axis": {"labelLimit": 150}
+    },
+    "x": {
+      "field": "avg_consumption",
+      "type": "quantitative",
+      "title": "Average Coffee Consumption (kg/person)"
+    },
+    "color": {
+      "field": "Country",
+      "type": "nominal",
+      "scale": {"scheme": "category10"},
+      "legend": {"title": "Country", "orient": "right"}
+    },
+    "tooltip": [
+      {"field": "Country", "type": "nominal"},
+      {"field": "avg_consumption", "type": "quantitative", "format": ".2f", "title": "Avg. Consumption (kg/person)"}
+    ]
+  },
+  "config": {
+    "scale": {
+      "scheme": "category10"
+    }
+  }
+}
