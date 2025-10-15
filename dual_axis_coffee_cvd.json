@@ -4,11 +4,15 @@
     "text": "Coffee Consumption vs. Cardiovascular Disease Deaths (1990-2019)",
     "subtitle": "Global averages from complete datasets (joined by year, not by country)",
     "anchor": "middle",
-    "fontSize": 18,
+    "fontSize": 20,
     "fontWeight": "bold"
   },
-  "width": 800,
-  "height": 500,
+  "width": "container",
+  "height": 600,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
   "layer": [
     {
       "data": {
@@ -18,84 +22,47 @@
         {"filter": "datum.Year >= 1990 && datum.Year <= 2019"},
         {
           "aggregate": [
-            {"op": "mean", "field": "Consumption_Per_Capita_kg", "as": "mean_consumption"},
-            {"op": "count", "as": "country_count_coffee"}
+            {"op": "mean", "field": "Consumption_Per_Capita_kg", "as": "avg_coffee"}
           ],
           "groupby": ["Year"]
         }
       ],
       "mark": {
         "type": "line",
-        "strokeWidth": 4,
         "color": "#8B4513",
-        "point": {
-          "filled": true,
-          "size": 80,
-          "color": "#8B4513"
-        }
+        "strokeWidth": 3,
+        "point": {"filled": true, "size": 60, "color": "#8B4513"}
       },
       "encoding": {
         "x": {
           "field": "Year",
           "type": "quantitative",
-          "title": "Year",
+          "scale": {"domain": [1990, 2020]},
           "axis": {
+            "title": "Year",
+            "titleFontSize": 13,
+            "labelFontSize": 11,
             "format": "d",
             "tickCount": 10,
-            "labelFontSize": 12,
-            "titleFontSize": 14
-          },
-          "scale": {"domain": [1990, 2019]}
+            "orient": "bottom"
+          }
         },
         "y": {
-          "field": "mean_consumption",
+          "field": "avg_coffee",
           "type": "quantitative",
-          "title": "Average Coffee Consumption Per Capita (kg)",
+          "scale": {"domain": [0, 3.5]},
           "axis": {
-            "labelFontSize": 12,
-            "titleFontSize": 14,
+            "title": "Coffee Consumption (kg per capita)",
             "titleColor": "#8B4513",
-            "tickCount": 6
-          },
-          "scale": {"zero": false}
+            "titleFontSize": 13,
+            "labelFontSize": 11,
+            "tickCount": 7
+          }
         },
         "tooltip": [
           {"field": "Year", "type": "quantitative", "title": "Year"},
-          {"field": "mean_consumption", "type": "quantitative", "title": "Average Coffee (kg)", "format": ".3f"},
-          {"field": "country_count_coffee", "type": "quantitative", "title": "Countries in Coffee Data"}
+          {"field": "avg_coffee", "type": "quantitative", "title": "Coffee Consumption", "format": ".2f"}
         ]
-      }
-    },
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/Ng-Jun-Xian/3179-A2/main/Coffee_consumption_per_capita.csv"
-      },
-      "transform": [
-        {"filter": "(datum.Year == 1990 || datum.Year == 2019)"},
-        {
-          "aggregate": [
-            {"op": "mean", "field": "Consumption_Per_Capita_kg", "as": "mean_consumption"}
-          ],
-          "groupby": ["Year"]
-        }
-      ],
-      "mark": {
-        "type": "text",
-        "align": "left",
-        "dx": 10,
-        "dy": -10,
-        "fontSize": 14,
-        "fontWeight": "bold",
-        "color": "#8B4513"
-      },
-      "encoding": {
-        "x": {"field": "Year", "type": "quantitative"},
-        "y": {"field": "mean_consumption", "type": "quantitative"},
-        "text": {
-          "field": "mean_consumption",
-          "type": "quantitative",
-          "format": ".2f"
-        }
       }
     },
     {
@@ -106,18 +73,25 @@
         {"filter": "datum.Year >= 1990 && datum.Year <= 2019"},
         {
           "aggregate": [
-            {"op": "mean", "field": "Consumption_Per_Capita_kg", "as": "overall_mean"}
-          ]
-        }
+            {"op": "mean", "field": "Consumption_Per_Capita_kg", "as": "avg_coffee"}
+          ],
+          "groupby": ["Year"]
+        },
+        {"filter": "datum.Year == 1990 || datum.Year == 2019"}
       ],
       "mark": {
-        "type": "rule",
-        "strokeDash": [8, 4],
-        "strokeWidth": 2,
+        "type": "text",
+        "align": "left",
+        "dx": 8,
+        "dy": -10,
+        "fontSize": 12,
+        "fontWeight": "bold",
         "color": "#8B4513"
       },
       "encoding": {
-        "y": {"field": "overall_mean", "type": "quantitative"}
+        "x": {"field": "Year", "type": "ordinal", "axis": null},
+        "y": {"field": "avg_coffee", "type": "quantitative", "axis": null},
+        "text": {"field": "avg_coffee", "type": "quantitative", "format": ".2f"}
       }
     },
     {
@@ -128,75 +102,41 @@
         {"filter": "datum.Year >= 1990 && datum.Year <= 2019"},
         {
           "aggregate": [
-            {"op": "mean", "field": "Age-standardized deaths from cardiovascular diseases in both sexes in those aged all ages per 100,000 people", "as": "mean_cvd"},
-            {"op": "count", "as": "country_count_cvd"}
+            {"op": "mean", "field": "Age-standardized deaths from cardiovascular diseases in both sexes in those aged all ages per 100,000 people", "as": "avg_cvd"}
           ],
           "groupby": ["Year"]
         }
       ],
       "mark": {
         "type": "line",
-        "strokeWidth": 4,
         "color": "#C13838",
-        "point": {
-          "filled": true,
-          "size": 80,
-          "color": "#C13838"
-        },
-        "strokeDash": [6, 3]
+        "strokeWidth": 3,
+        "strokeDash": [6, 3],
+        "point": {"filled": true, "size": 60, "color": "#C13838"}
       },
       "encoding": {
-        "x": {"field": "Year", "type": "quantitative"},
-        "y": {
-          "field": "mean_cvd",
+        "x": {
+          "field": "Year",
           "type": "quantitative",
-          "title": "Average CVD Deaths (per 100,000)",
+          "axis": null
+        },
+        "y": {
+          "field": "avg_cvd",
+          "type": "quantitative",
+          "scale": {"domain": [0, 350]},
           "axis": {
-            "labelFontSize": 12,
-            "titleFontSize": 14,
+            "title": "CVD Deaths (per 100,000)",
             "titleColor": "#C13838",
+            "titleFontSize": 13,
+            "labelFontSize": 11,
             "orient": "right",
-            "tickCount": 6
-          },
-          "scale": {"zero": false}
+            "tickCount": 7
+          }
         },
         "tooltip": [
-          {"field": "Year", "type": "quantitative", "title": "Year"},
-          {"field": "mean_cvd", "type": "quantitative", "title": "Avg CVD Deaths", "format": ".1f"},
-          {"field": "country_count_cvd", "type": "quantitative", "title": "Countries in CVD Data"}
+          {"field": "Year", "type": "ordinal", "title": "Year"},
+          {"field": "avg_cvd", "type": "quantitative", "title": "CVD Deaths", "format": ".1f"}
         ]
-      }
-    },
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/Ng-Jun-Xian/3179-A2/main/cardiovascular-disease-death-rate-crude-versus-age-standardized.csv"
-      },
-      "transform": [
-        {"filter": "(datum.Year == 1990 || datum.Year == 2019)"},
-        {
-          "aggregate": [
-            {"op": "mean", "field": "Age-standardized deaths from cardiovascular diseases in both sexes in those aged all ages per 100,000 people", "as": "mean_cvd"}
-          ],
-          "groupby": ["Year"]
-        }
-      ],
-      "mark": {
-        "type": "text",
-        "align": "right",
-        "dx": 10,
-        "dy": -10,
-        "fontSize": 14,
-        "fontWeight": "bold",
-        "color": "#C13838"
-      },
-      "encoding": {
-        "x": {"field": "Year", "type": "quantitative"},
-        "y": {"field": "mean_cvd", "type": "quantitative"},
-        "text": {
-          "field": "mean_cvd",
-          "type": "quantitative",
-          "format": ".1f"
-        }
       }
     },
     {
@@ -207,50 +147,55 @@
         {"filter": "datum.Year >= 1990 && datum.Year <= 2019"},
         {
           "aggregate": [
-            {"op": "mean", "field": "Age-standardized deaths from cardiovascular diseases in both sexes in those aged all ages per 100,000 people", "as": "overall_mean_cvd"}
-          ]
-        }
+            {"op": "mean", "field": "Age-standardized deaths from cardiovascular diseases in both sexes in those aged all ages per 100,000 people", "as": "avg_cvd"}
+          ],
+          "groupby": ["Year"]
+        },
+        {"filter": "datum.Year == 1990 || datum.Year == 2019"}
       ],
       "mark": {
-        "type": "rule",
-        "strokeDash": [8, 4],
-        "strokeWidth": 2,
+        "type": "text",
+        "align": "right",
+        "dx": -8,
+        "dy": 12,
+        "fontSize": 12,
+        "fontWeight": "bold",
         "color": "#C13838"
       },
       "encoding": {
-        "y": {"field": "overall_mean_cvd", "type": "quantitative"}
+        "x": {"field": "Year", "type": "quantitative", "axis": null},
+        "y": {"field": "avg_cvd", "type": "quantitative", "axis": null},
+        "text": {"field": "avg_cvd", "type": "quantitative", "format": ".1f"}
       }
     },
     {
       "data": {"values": [{}]},
       "mark": {
         "type": "text",
-        "align": "left",
-        "baseline": "middle",
-        "fontSize": 14,
+        "align": "center",
+        "fontSize": 12,
         "fontWeight": "bold",
-        "color": "#8B4513"
+        "color": "#8B4513",
+        "dx": -280,
+        "dy": -220
       },
       "encoding": {
-        "x": {"value": 400},
-        "y": {"value": 20},
-        "text": {"value": "Coffee Consumption (solid brown line)"}
+        "text": {"value": "━━━ Coffee Consumption"}
       }
     },
     {
       "data": {"values": [{}]},
       "mark": {
         "type": "text",
-        "align": "left",
-        "baseline": "middle",
-        "fontSize": 14,
+        "align": "center",
+        "fontSize": 12,
         "fontWeight": "bold",
-        "color": "#C13838"
+        "color": "#C13838",
+        "dx": 280,
+        "dy": -220
       },
       "encoding": {
-        "x": {"value": 650},
-        "y": {"value": 20},
-        "text": {"value": "CVD Deaths (dashed red line)"}
+        "text": {"value": "- - - CVD Deaths"}
       }
     },
     {
@@ -258,13 +203,12 @@
       "mark": {
         "type": "text",
         "align": "right",
-        "baseline": "top",
-        "fontSize": 11,
-        "fontStyle": "italic"
+        "fontSize": 10,
+        "fontStyle": "italic",
+        "dx": 545,
+        "dy": 240
       },
       "encoding": {
-        "x": {"value": 790},
-        "y": {"value": 470},
         "text": {"value": "Data filtered for years 1990-2019 only"}
       }
     }
@@ -273,7 +217,6 @@
     "scale": {"y": "independent"}
   },
   "config": {
-    "view": {"strokeWidth": 0},
-    "axis": {"grid": true, "gridOpacity": 0.3}
+    "view": {"stroke": null}
   }
 }

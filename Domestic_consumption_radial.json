@@ -3,7 +3,8 @@
   "title": {
     "text": "Coffee Consumption by Type - Radial View (2019)",
     "subtitle": "Domestic Producers Only - Each arc segment represents a country's consumption",
-    "anchor": "middle"
+    "anchor": "middle",
+    "fontSize": 24
   },
   "data": {
     "url": "Coffee_consumption_per_capita.csv"
@@ -22,7 +23,7 @@
       "groupby": ["Coffee_Type_Simple"]
     }
   ],
-  "width": 500,
+  "width": 700,
   "height": 500,
   "mark": {"type": "arc", "innerRadius": 50, "stroke": "white"},
   "encoding": {

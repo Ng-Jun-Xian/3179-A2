@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The World of Coffee: A Visual Narrative</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+    <style>
+        /* Root Variables */
+        :root {
+            --font-serif: 'Playfair Display', serif;
+            --font-body: 'Lora', serif;
+            --color-background: #FDFDFB;
+            --color-text: #1A1A1A;
+            --color-accent: #8B4513;
+            --color-accent-light: #D4915D;
+            --color-subtle: #5A5A5A;
+            --color-highlight: #F5EFE7;
+            --spacing-unit: 1.5rem;
+            --max-width: 1400px;
+            --line-height: 1.75;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: var(--line-height);
+            font-size: 1.0625rem;
+        }
+
+        /* Layout Container */
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 4) 0;
+        }
+
+        /* Typography */
+        header {
+            text-align: center;
+            margin-bottom: calc(var(--spacing-unit) * 5);
+            padding-bottom: calc(var(--spacing-unit) * 3);
+            border-bottom: 2px solid var(--color-accent);
+        }
+
+        h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: calc(var(--spacing-unit) * 0.75);
+            color: var(--color-accent);
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: clamp(1.125rem, 2vw, 1.375rem);
+            font-style: italic;
+            color: var(--color-subtle);
+            max-width: 42rem;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: calc(var(--spacing-unit) * 0.75);
+            color: var(--color-text);
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+
+        .section-intro {
+            text-align: center;
+            font-size: 1.125rem;
+            color: var(--color-subtle);
+            max-width: 48rem;
+            margin: 0 auto calc(var(--spacing-unit) * 3) auto;
+            line-height: 1.7;
+        }
+
+        /* Section Dividers */
+        hr.divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--color-accent-light), transparent);
+            margin: calc(var(--spacing-unit) * 6) auto;
+            width: 60%;
+        }
+
+        /* Grid Layouts */
+        .section-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: calc(var(--spacing-unit) * 2.5);
+            align-items: start;
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .section-grid.reverse {
+            grid-template-columns: 1fr 1.5fr;
+        }
+
+        .section-grid.equal {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* Responsive Full-Width Charts */
+        .full-width-chart {
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            width: 100%;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .full-width-chart .chart-container {
+            width: 100%;
+            max-width: var(--max-width);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+
+        .full-width-chart .chart-container > div {
+            width: 100% !important;
+            max-width: 100% !important;
+            display: flex;
+            justify-content: center;
+        }
+        
+        /* Force Vega-Lite charts to take full width and align */
+        .full-width-chart .chart-container > div > div {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        .full-width-chart .chart-container canvas,
+        .full-width-chart .chart-container svg {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        /* Regular chart containers */
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .chart-container > div {
+            width: 100%;
+        }
+
+        /* Updated Insight Cards - More Compact */
+        .insights-horizontal {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: calc(var(--spacing-unit) * 1.25);
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+
+        .insight-card {
+            background-color: var(--color-highlight);
+            border-left: 4px solid var(--color-accent);
+            padding: calc(var(--spacing-unit) * 0.85) calc(var(--spacing-unit) * 1.15);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .insight-card h3 {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: calc(var(--spacing-unit) * 0.4);
+            color: var(--color-accent);
+        }
+
+        .insight-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--color-text);
+            line-height: 1.55;
+        }
+
+        .insights-four-column {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .insights-four-column .insight-card {
+            padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1);
+        }
+
+        .insights-four-column .insight-card h3 {
+            font-size: 0.95rem;
+            margin-bottom: calc(var(--spacing-unit) * 0.35);
+        }
+
+        .insights-four-column .insight-card p {
+            font-size: 0.85rem;
+        }
+
+        /* Insights Container in Grid */
+        .insights-container {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .insights-container .insight-card {
+            padding: calc(var(--spacing-unit) * 0.9) calc(var(--spacing-unit) * 1.2);
+        }
+
+        .insights-container .insight-card h3 {
+            font-size: 1rem;
+        }
+
+        .insights-container .insight-card p {
+            font-size: 0.9rem;
+        }
+
+        /* Section Grid Charts */
+        .section-grid .chart-container,
+        .section-grid.reverse .chart-container,
+        .section-grid.equal .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Section Spacing */
+        section {
+            margin-bottom: calc(var(--spacing-unit) * 5);
+        }
+
+        /* Footer */
+        .metadata-footer {
+            text-align: center;
+            padding: calc(var(--spacing-unit) * 3) 0;
+            margin-top: calc(var(--spacing-unit) * 6);
+            border-top: 2px solid var(--color-accent);
+            color: var(--color-subtle);
+        }
+
+        .metadata-footer p {
+            margin: calc(var(--spacing-unit) * 0.33) 0;
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+
+        .metadata-footer strong {
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                width: 92%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .section-grid,
+            .section-grid.reverse,
+            .section-grid.equal {
+                grid-template-columns: 1fr;
+                gap: calc(var(--spacing-unit) * 2);
+            }
+
+            .insights-horizontal {
+                grid-template-columns: 1fr;
+                gap: calc(var(--spacing-unit) * 1);
+            }
+            
+            .insights-four-column {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .container {
+                width: 95%;
+                padding: calc(var(--spacing-unit) * 2.5) 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                font-size: 1rem;
+            }
+
+            .section-intro {
+                font-size: 1rem;
+                margin-bottom: calc(var(--spacing-unit) * 2);
+            }
+
+            .insight-card {
+                padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1);
+            }
+            
+            .insight-card h3 {
+                font-size: 0.95rem;
+            }
+            
+            .insight-card p {
+                font-size: 0.85rem;
+            }
+            
+            .insights-four-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                width: 95%;
+            }
+            
+            .full-width-chart {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>A Journey Through Coffee</h1>
+            <p class="subtitle">From the fertile soils of the Bean Belt to the world's favorite cup, explore the global story of coffee through data and discovery.</p>
+        </header>
+
+        <!-- Section 1: Origins -->
+        <section>
+            <h2>Origins: The Global Bean Belt</h2>
+            <p class="section-intro">Coffee cultivation thrives within the "Bean Belt," a narrow band around the equator where optimal climate and altitude converge. This region, spanning Latin America, Africa, and Southeast Asia, produces virtually all of the world's coffee, with each origin contributing distinct flavors and characteristics shaped by its unique terroir.</p>
+            
+            <div class="full-width-chart">
+                <div class="chart-container">
+                    <div id="map_coffee_production"></div>
+                </div>
+            </div>
+            
+            <div class="insights-horizontal">
+                <div class="insight-card">
+                    <h3>The Bean Belt Geography</h3>
+                    <p>Coffee production concentrates in the equatorial zone where consistent temperatures, distinct wet and dry seasons, and high altitudes create ideal growing conditions.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Brazilian Dominance</h3>
+                    <p>Brazil stands as the undisputed leader, producing more coffee than any other nation and shaping global market dynamics through its vast plantations.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>African Heritage</h3>
+                    <p>Ethiopia, where coffee was first discovered, continues as a major Arabica producer, maintaining traditions that date back centuries.</p>
+                </div>
+            </div>
+            
+            <div class="section-grid" style="margin-top: calc(var(--spacing-unit) * 3);">
+                <div class="chart-container">
+                    <div id="area_chart_production"></div>
+                </div>
+                <div class="insights-container">
+                    <div class="insight-card">
+                        <h3>Three Decades of Growth</h3>
+                        <p>Global coffee production has grown steadily from 1990 to 2020, with the top five producers consistently dominating the market and accounting for the majority of worldwide output.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h3>Vietnam's Remarkable Ascent</h3>
+                        <p>Vietnam's production expanded dramatically during this period, transforming from a minor player to the world's second-largest producer through focused investment in Robusta cultivation.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h3>Market Stability</h3>
+                        <p>Despite weather challenges and market fluctuations, the top producers have maintained relatively stable production levels, ensuring consistent global supply.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-grid reverse" style="margin-top: calc(var(--spacing-unit) * 2);">
+                <div class="insights-container">
+                    <div class="insight-card">
+                        <h3>Regional Shifts Over Time</h3>
+                        <p>The Americas have maintained consistent production leadership, while Asia-Pacific has experienced remarkable growth, particularly driven by Vietnam's expansion into Robusta coffee since the 1990s.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h3>Africa's Steady Contribution</h3>
+                        <p>African nations maintain stable production levels, focusing on high-quality Arabica varieties that command premium prices in specialty markets.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h3>Continental Balance</h3>
+                        <p>The distribution across three major regions creates a balanced global supply chain, with each continent contributing unique varieties and processing traditions.</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div id="Regional_coffee_production"></div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+       <!-- Section 2: Global Trade -->
+        <section>
+            <h2>The Global Journey: From Bean to Cup</h2>
+            <p class="section-intro">Once harvested and processed, coffee beans embark on an epic voyage across oceans and continents. This intricate web of international commerce connects mountain farmers in Colombia with morning commuters in Tokyo, creating one of the world's most valuable and culturally significant trade networks.</p>
+            
+            <div class="section-grid">
+                <div class="chart-container">
+                    <div id="flow_import_export"></div>
+                </div>
+                <div class="insights-container">
+                    <div class="insight-card">
+                        <h3>A Web of Global Commerce</h3>
+                        <p>Brazil sends massive coffee shipments to the US, Vietnam's exports to Europe are growing fast, and Colombia maintains steady trade—together forming a global network that delivers your daily coffee.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h3>The Power of the Few</h3>
+                        <p>Just 10 exporters and importers drive most of the coffee trade. When Brazil or Vietnam face problems, coffee prices react worldwide almost immediately.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h3>Europe's Strategic Position</h3>
+                        <p>Belgium, the Netherlands, and Germany serve as Europe's main coffee gateways, importing beans, roasting them, and distributing across the continent.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-grid equal" style="margin-top: calc(var(--spacing-unit) * 3);">
+                <div class="chart-container">
+                    <div id="Top5_exporters"></div>
+                </div>
+                <div class="chart-container">
+                    <div id="Top5_importers"></div>
+                </div>
+            </div>
+            
+            <div class="insights-four-column" style="margin-top: calc(var(--spacing-unit) * 2);">
+                <div class="insight-card">
+                    <h3>Brazil's Unshaken Throne</h3>
+                    <p>Brazil exports 20-30 billion kg of coffee yearly, with its Santos port handling more beans than most countries produce.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Vietnam's Dramatic Ascent</h3>
+                    <p>Vietnam quickly rose to become a major exporter by shifting millions of farmers from rice to coffee in just a few decades.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>America's Insatiable Appetite</h3>
+                    <p>The US imports over 1.3 billion kg of coffee, driving strong global demand from both traditional and specialty coffee lovers.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Germany's Coffee Gateway</h3>
+                    <p>Germany imports and roasts green coffee beans before sending them across Europe, with Hamburg's port rivaling Brazil's Santos in importance.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Section 3: Coffee Consumption -->
+        <section>
+            <h2>The World's Coffee Habit</h2>
+            <p class="section-intro">Coffee consumption tells a story of economic development, cultural evolution, and changing lifestyles. From Nordic countries where coffee is a daily ritual to emerging markets discovering specialty coffee, consumption patterns reveal how this beverage has become integral to modern life across all continents.</p>
+            
+            <div class="full-width-chart">
+                <div class="chart-container">
+                    <div id="linechart_coffee_consumption"></div>
+                </div>
+            </div>
+            
+            <div class="insights-horizontal">
+                <div class="insight-card">
+                    <h3>Steady Global Growth</h3>
+                    <p>Average per capita coffee consumption has grown consistently over three decades, rising from 1.19 kg in 1990 to 1.31 kg by 2019, reflecting coffee's expanding role in daily life worldwide.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Universal Appeal</h3>
+                    <p>The upward trend crosses all continents and cultures, demonstrating coffee's unique ability to transcend geographic and cultural boundaries as both commodity and cultural touchstone.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>The New Normal</h3>
+                    <p>What was once a luxury has become a daily necessity. Coffee shops multiply in cities worldwide, and morning coffee rituals define routines from Tokyo to São Paulo.</p>
+                </div>
+            </div>
+
+            <div class="section-grid" style="margin-top: calc(var(--spacing-unit) * 3);">
+                <div class="chart-container">
+                    <div id="Bar_country_comsumption"></div>
+                </div>
+                <div class="insights-container">
+                    <div class="insight-card">
+                        <h3>Northern Leaders</h3>
+                        <p>European countries, especially Luxembourg, Finland, and Norway, top the list for coffee consumption per person, highlighting coffee's strong cultural roots in the north.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h3>Global Diversity</h3>
+                        <p>Coffee habits vary widely, with some smaller nations and major producers showing moderate per capita consumption, reflecting different cultures and traditions around the world.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-grid reverse" style="margin-top: calc(var(--spacing-unit) * 2);">
+                <div class="insights-container">
+                    <div class="insight-card">
+                        <h3>Arabica Dominance</h3>
+                        <p>Most domestic coffee consumption leans heavily toward Arabica varieties, prized for their flavor and quality, especially in established producing countries like Ethiopia and Brazil.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h3>Robusta's Role</h3>
+                        <p>Robusta coffee plays a significant role in countries focusing on higher yield and resilience, notably in Vietnam and parts of Asia, highlighting diverse consumption patterns aligned with local production.</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div id="Domestic_consumption_radial"></div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Section 4: Coffee & GDP -->
+        <section>
+            <h2>Fuel for Productivity: How Coffee Powers Prosperity</h2>
+            <p class="section-intro">Coffee isn't just a beverage—it's a secret ingredient in workplace performance. This chart reveals how the world's most caffeinated nations often enjoy higher productivity and prosperity, highlighting coffee's role in sharper thinking, collaboration, and an energized economy.</p>
+            
+            <div class="full-width-chart">
+                <div class="chart-container">
+                    <div id="gdp_consumption_correlation"></div>
+                </div>
+            </div>
+            
+            <div class="insights-horizontal">
+                <div class="insight-card">
+                    <h3>Coffee and Wealth Go Hand in Hand</h3>
+                    <p>Countries with higher income levels tend to drink more coffee per person, suggesting that coffee culture often thrives where economic prosperity supports both access and lifestyle habits.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Small Nations, Big Coffee Passion</h3>
+                    <p>Some smaller countries outpace the giants in per capita coffee consumption, showing that love for coffee isn't just about size—it's a cultural passion that fuels daily productivity.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Productivity in Every Sip</h3>
+                    <p>The correlation between coffee drinking and GDP reflects coffee's role in boosting alertness and focus, helping workers worldwide power through their tasks and contribute to their economies.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Section 5: Coffee & Cardiovascular Health -->
+        <section>
+            <h2>A Healthier Heart in Every Cup</h2>
+            <p class="section-intro">Contrary to old myths, coffee might actually be good for your heart. This chart tracks three decades of global data, revealing a surprising inverse relationship: as coffee consumption rises, cardiovascular disease deaths decline suggesting your morning brew could be protecting more than just your productivity.</p>
+            
+            <div class="full-width-chart">
+                <div class="chart-container">
+                    <div id="dual_axis_coffee_cvd"></div>
+                </div>
+            </div>
+            
+            <div class="insights-horizontal">
+                <div class="insight-card">
+                    <h3>Coffee Up, Heart Disease Down</h3>
+                    <p>From 1990 to 2019, global coffee consumption climbed 24% while cardiovascular deaths dropped by 44%—a pattern that challenges outdated fears about coffee and heart health.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Antioxidants at Work</h3>
+                    <p>Coffee is packed with polyphenols and antioxidants that fight inflammation and protect blood vessels, potentially explaining why regular drinkers often show better heart health markers.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Moderation Matters</h3>
+                    <p>Studies suggest 3-5 cups daily hits the sweet spot for cardiovascular benefits—enough to harness coffee's protective compounds without overdoing the caffeine.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Section 6: Coffee Processing -->
+        <section>
+            <h2>The Processing Makes the Difference</h2>
+            <p class="section-intro">Not all coffee is created equal. How beans are processed after harvest dramatically shapes their flavor profile—from the bold, wine-like notes of natural processing to the clean brightness of washed beans. These radar charts reveal how each method sculpts a distinct sensory signature.</p>
+            
+            <div class="full-width-chart">
+                <div class="chart-container">
+                    <div id="process_method_cup_points"></div>
+                </div>
+            </div>
+            
+            <div class="insights-horizontal">
+                <div class="insight-card">
+                    <h3>Natural Processing: Bold & Fruity</h3>
+                    <p>Drying beans with the fruit intact creates intense flavor and sweetness, scoring highest in aroma and body—perfect for those who love a full-bodied, fruit-forward cup.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Washed Method: Bright & Clean</h3>
+                    <p>Removing the fruit before drying produces higher acidity and clarity, delivering that crisp, refreshing taste favored by specialty coffee enthusiasts seeking pure bean character.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Semi-Washed: The Best of Both</h3>
+                    <p>A hybrid approach balances sweetness and acidity, offering moderate body with clean aftertaste—an approachable middle ground for exploring coffee's diverse flavor spectrum.</p>
+                </div>
+            </div>
+        </section>  
+    </div>
+
+    <footer class="metadata-footer">
+        <p><strong>Author:</strong> Ng Jun Xian</p>
+        <p><strong>Date Created:</strong> October 2025</p>
+        <p><strong>Data Sources:</strong> International Coffee Organization (ICO), World Bank Development Indicators, Our World in Data (Cardiovascular Disease Statistics)</p>
+        <p><strong>Visualization Tools:</strong> Vega-Lite v5, Vega v5</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Full-width responsive charts
+            const fullWidthCharts = [
+                'map_coffee_production',
+                'linechart_coffee_consumption',
+                'gdp_consumption_correlation',
+                'dual_axis_coffee_cvd',
+                'process_method_cup_points'
+            ];
+            
+            // Side-by-side charts
+            const sideCharts = [
+                'area_chart_production',
+                'Regional_coffee_production',
+                'flow_import_export',
+                'Top5_exporters',
+                'Top5_importers',
+                'Bar_country_comsumption',
+                'Domestic_consumption_radial'
+            ];
+
+            // Embed full-width charts with container width
+            fullWidthCharts.forEach(chartId => {
+                const element = document.getElementById(chartId);
+                if (element) {
+                    vegaEmbed(`#${chartId}`, `${chartId}.json`, { 
+                        "actions": false,
+                        "renderer": "svg"
+                    }).catch(error => {
+                        console.error(`Error loading ${chartId}:`, error);
+                        element.innerHTML = `<p style="color: #999; text-align: center; padding: 2rem;">Chart could not be loaded. Please ensure ${chartId}.json is available.</p>`;
+                    });
+                }
+            });
+
+            // Embed side-by-side charts
+            sideCharts.forEach(chartId => {
+                const element = document.getElementById(chartId);
+                if (element) {
+                    vegaEmbed(`#${chartId}`, `${chartId}.json`, { 
+                        "actions": false,
+                        "renderer": "svg"
+                    }).catch(error => {
+                        console.error(`Error loading ${chartId}:`, error);
+                        element.innerHTML = `<p style="color: #999; text-align: center; padding: 2rem;">Chart could not be loaded. Please ensure ${chartId}.json is available.</p>`;
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

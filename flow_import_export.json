@@ -1,7 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "width": 1000,
-  "height": 650,
+  "width": 800,
+  "height": 500,
   "background": "#FAFAF8",
   "title": {
     "text": "Global Coffee Trade Flow Network (1990-2019)",

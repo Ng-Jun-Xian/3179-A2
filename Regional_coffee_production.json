@@ -1,11 +1,10 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "width": 800,
-  "height": 400,
-  "title": {
+  "width": 700,
+  "height": 500,
+  "title": {  
     "text": "Regional Coffee Production Evolution (1990-2020)",
-    "subtitle": "Stacked area showing shifts in global coffee production by region",
-    "fontSize": 16,
+    "fontSize": 26,
     "anchor": "start",
     "color": "#333"
   },

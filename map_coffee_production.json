@@ -1,21 +1,19 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "width": 900,
-  "height": 500,
-  "title": {
-    "text": "Global Coffee Production (1990-2020)",
-    "subtitle": "Circle size represents total production volume",
-    "fontSize": 16,
-    "anchor": "start",
-    "color": "#333"
+  "width": "container",
+  "height": 600,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
   },
+  "background": "#FAFAF8",
   "projection": {"type": "equalEarth"},
   "layer": [
-    { 
+    {
       "data": {"sphere": true},
       "mark": {"type": "geoshape", "fill": "lightblue", "stroke": "steelblue", "strokeWidth": 1}
     },
-    { 
+    {
       "data": {"graticule": {"step": [30, 30]}},
       "mark": {"type": "geoshape", "fill": null, "stroke": "#666666", "strokeWidth": 0.5, "strokeOpacity": 0.5}
     },
@@ -84,10 +82,10 @@
           "title": "Production (billion kg)",
           "scale": {"type": "sqrt", "domain": [0, 80], "range": [50, 3000]},
           "legend": {
-            "orient": "bottom-left",
+            "orient": "right",
             "format": ".1f",
-            "offset": 10,
-            "direction": "vertical"
+            "titleFontSize": 14,
+            "labelFontSize": 12
           }
         },
         "color": {
@@ -99,9 +97,9 @@
             "range": ["#FFD700", "#377EB8", "#4DAF4A"]
           },
           "legend": {
-            "orient": "top-left",
-            "offset": 10,
-            "direction": "vertical"
+            "orient": "right",
+            "titleFontSize": 12,
+            "labelFontSize": 10
           }
         },
         "tooltip": [

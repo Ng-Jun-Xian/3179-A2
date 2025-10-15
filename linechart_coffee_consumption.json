@@ -4,14 +4,18 @@
     "text": "Global Coffee Consumption Overview (1990-2019)",
     "subtitle": "Average per capita consumption trend worldwide",
     "anchor": "middle",
-    "fontSize": 18,
+    "fontSize": 24,
     "fontWeight": "bold"
   },
   "data": {
     "url": "Coffee_consumption_per_capita.csv"
   },
-  "width": 800,
-  "height": 450,
+  "width": "container",
+  "height": 600,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
   "transform": [
     {
       "aggregate": [

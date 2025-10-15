@@ -1,15 +1,28 @@
 {
-  "$schema": "https://vega.github.io/schema/vega/v6.json",
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
   "description": "Three radar charts (small multiples) by Processing Method with titles above and tooltips.",
-  "width": 1100,
-  "height": 400,
-  "padding": 20,
-  "autosize": {"type": "none", "contains": "padding"},
+  "width": 1200,
+  "height": 450,
+  "padding": 30,
+  "autosize": {"type": "fit", "contains": "padding"},
+  
+  "title": {
+    "text": "Coffee Processing Methods: Flavor Profile Comparison",
+    "subtitle": "Average cupping scores across key attributes (Arabica beans only)",
+    "anchor": "middle",
+    "fontSize": 20,
+    "fontWeight": "bold",
+    "subtitleFontSize": 13,
+    "subtitleColor": "#666",
+    "offset": 10
+  },
+  
   "signals": [
-    {"name": "radius", "value": 110},
+    {"name": "radius", "value": 100},
     {"name": "dotSize", "value": 40},
-    {"name": "titleGap", "value": 40}
+    {"name": "titleGap", "value": 35}
   ],
+  
   "data": [
     {
       "name": "raw",
@@ -75,6 +88,7 @@
       ]
     }
   ],
+  
   "scales": [
     {
       "name": "angular",
@@ -105,6 +119,7 @@
       "range": ["#e41a1c", "#377eb8", "#4daf4a"]
     }
   ],
+  
   "marks": [
     {
       "type": "group",
@@ -333,9 +348,9 @@
           "encode": {
             "enter": {
               "x": {"signal": "radius"},
-              "y": {"value": 14},
+              "y": {"value": 10},
               "align": {"value": "center"},
-              "fontSize": {"value": 16},
+              "fontSize": {"value": 15},
               "fontWeight": {"value": "bold"},
               "fill": {"value": "#333"},
               "text": {"signal": "parent.category"}

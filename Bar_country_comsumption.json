@@ -1,7 +1,10 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Average Coffee Consumption Per Capita (kg/person) Across All Years",
-  "width": 600,
+  "title": {
+    "text": "Average Coffee Consumption Per Capita (kg/person) Across All Years",
+    "fontSize": 24
+  },
+  "width": 700,
   "height": 500,
   "data": {"url": "Coffee_consumption_per_capita.csv"},
   "transform": [

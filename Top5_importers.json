@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "width": 800,
+  "width": 500,
   "height": 450,
   "title": {
     "text": "Coffee Import Evolution (1990-2019)",
