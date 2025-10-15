@@ -1,0 +1,348 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v6.json",
+  "description": "Three radar charts (small multiples) by Processing Method with titles above and tooltips.",
+  "width": 1100,
+  "height": 400,
+  "padding": 20,
+  "autosize": {"type": "none", "contains": "padding"},
+  "signals": [
+    {"name": "radius", "value": 110},
+    {"name": "dotSize", "value": 40},
+    {"name": "titleGap", "value": 40}
+  ],
+  "data": [
+    {
+      "name": "raw",
+      "url": "coffee_types_clean.csv",
+      "format": {"type": "csv"},
+      "transform": [
+        {"type": "filter", "expr": "datum.Species == 'Arabica'"},
+        {"type": "filter", "expr": "datum.Processing_Method != null && datum.Processing_Method != 'nan'"}
+      ]
+    },
+    {
+      "name": "table",
+      "source": "raw",
+      "transform": [
+        {
+          "type": "aggregate", 
+          "groupby": ["Processing_Method", "Attribute"],
+          "fields": ["Value"],
+          "ops": ["mean"],
+          "as": ["Value"]
+        },
+        {"type": "formula", "as": "key", "expr": "datum.Attribute"},
+        {"type": "formula", "as": "value", "expr": "datum.Value"},
+        {"type": "formula", "as": "category", "expr": "datum.Processing_Method"}
+      ]
+    },
+    {
+      "name": "processed_data",
+      "source": "raw",
+      "transform": [
+        {
+          "type": "aggregate", 
+          "groupby": ["Processing_Method"],
+          "fields": ["Aroma", "Flavor", "Aftertaste", "Acidity", "Body", "Balance", "Clean_Cup"],
+          "ops": ["mean", "mean", "mean", "mean", "mean", "mean", "mean"],
+          "as": ["avg_Aroma", "avg_Flavor", "avg_Aftertaste", "avg_Acidity", "avg_Body", "avg_Balance", "avg_Clean_Cup"]
+        },
+        {"type": "fold", "fields": ["avg_Aroma", "avg_Flavor", "avg_Aftertaste", "avg_Acidity", "avg_Body", "avg_Balance", "avg_Clean_Cup"], "as": ["Attribute", "Value"]},
+        {"type": "formula", "as": "key", "expr": "replace(datum.Attribute, 'avg_', '')"},
+        {"type": "formula", "as": "value", "expr": "datum.Value"},
+        {"type": "formula", "as": "category", "expr": "datum.Processing_Method"}
+      ]
+    },
+    {
+      "name": "keys",
+      "source": "processed_data",
+      "transform": [
+        {"type": "aggregate", "groupby": ["key"]}
+      ]
+    },
+    {
+      "name": "categories",
+      "source": "processed_data",
+      "transform": [
+        {"type": "aggregate", "groupby": ["category"]}
+      ]
+    },
+    {
+      "name": "radialMax",
+      "source": "processed_data",
+      "transform": [
+        {"type": "aggregate", "fields": ["value"], "ops": ["max"], "as": ["maxv"]}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "angular",
+      "type": "point",
+      "range": {"signal": "[-PI, PI]"},
+      "padding": 0.5,
+      "domain": ["Aroma", "Flavor", "Aftertaste", "Acidity", "Body", "Balance", "Clean_Cup"]
+    },
+    {
+      "name": "radial",
+      "type": "linear",
+      "range": {"signal": "[0, radius]"},
+      "zero": true,
+      "nice": false,
+      "domain": [0, 10]
+    },
+    {
+      "name": "facetX",
+      "type": "point",
+      "domain": ["Natural / Dry", "Washed / Wet", "Semi-washed / Semi-pulped"],
+      "range": [0, {"signal": "width"}],
+      "padding": 0.6
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["Natural / Dry", "Washed / Wet", "Semi-washed / Semi-pulped"],
+      "range": ["#e41a1c", "#377eb8", "#4daf4a"]
+    }
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "name": "panels",
+      "from": {"facet": {"data": "processed_data", "name": "facet", "groupby": ["category"]}},
+      "encode": {
+        "enter": {
+          "x": {"scale": "facetX", "field": "category", "offset": {"signal": "-radius"}},
+          "y": {"value": 0},
+          "width": {"signal": "radius * 2"},
+          "height": {"signal": "radius * 2 + titleGap"}
+        }
+      },
+      "marks": [
+        {
+          "type": "group",
+          "encode": {"enter": {"x": {"signal": "radius"}, "y": {"signal": "radius + titleGap"}}},
+          "marks": [
+            {
+              "type": "arc",
+              "encode": {
+                "enter": {
+                  "innerRadius": {"signal": "scale('radial', 2)"},
+                  "outerRadius": {"signal": "scale('radial', 2)"},
+                  "startAngle": {"value": 0},
+                  "endAngle": {"value": 6.28318530718},
+                  "stroke": {"value": "#ccc"},
+                  "strokeWidth": {"value": 1}
+                }
+              }
+            },
+            {
+              "type": "arc",
+              "encode": {
+                "enter": {
+                  "innerRadius": {"signal": "scale('radial', 4)"},
+                  "outerRadius": {"signal": "scale('radial', 4)"},
+                  "startAngle": {"value": 0},
+                  "endAngle": {"value": 6.28318530718},
+                  "stroke": {"value": "#ccc"},
+                  "strokeWidth": {"value": 1}
+                }
+              }
+            },
+            {
+              "type": "arc",
+              "encode": {
+                "enter": {
+                  "innerRadius": {"signal": "scale('radial', 6)"},
+                  "outerRadius": {"signal": "scale('radial', 6)"},
+                  "startAngle": {"value": 0},
+                  "endAngle": {"value": 6.28318530718},
+                  "stroke": {"value": "#ccc"},
+                  "strokeWidth": {"value": 1}
+                }
+              }
+            },
+            {
+              "type": "arc",
+              "encode": {
+                "enter": {
+                  "innerRadius": {"signal": "scale('radial', 8)"},
+                  "outerRadius": {"signal": "scale('radial', 8)"},
+                  "startAngle": {"value": 0},
+                  "endAngle": {"value": 6.28318530718},
+                  "stroke": {"value": "#ccc"},
+                  "strokeWidth": {"value": 1}
+                }
+              }
+            },
+            {
+              "type": "arc",
+              "encode": {
+                "enter": {
+                  "innerRadius": {"signal": "scale('radial', 10)"},
+                  "outerRadius": {"signal": "scale('radial', 10)"},
+                  "startAngle": {"value": 0},
+                  "endAngle": {"value": 6.28318530718},
+                  "stroke": {"value": "#ccc"},
+                  "strokeWidth": {"value": 1}
+                }
+              }
+            },
+            {
+              "type": "rule",
+              "from": {"data": "keys"},
+              "encode": {
+                "enter": {
+                  "x": {"value": 0},
+                  "y": {"value": 0},
+                  "x2": {"signal": "radius * cos(scale('angular', datum.key))"},
+                  "y2": {"signal": "radius * sin(scale('angular', datum.key))"},
+                  "stroke": {"value": "#ccc"},
+                  "strokeWidth": {"value": 1}
+                }
+              }
+            },
+            {
+              "type": "line",
+              "from": {"data": "facet"},
+              "transform": [{"type": "collect", "sort": {"field": "key", "order": "ascending"}}],
+              "encode": {
+                "enter": {
+                  "interpolate": {"value": "linear-closed"},
+                  "x": {"signal": "scale('radial', datum.value) * cos(scale('angular', datum.key))"},
+                  "y": {"signal": "scale('radial', datum.value) * sin(scale('angular', datum.key))"},
+                  "stroke": {"scale": "color", "field": "category"},
+                  "strokeWidth": {"value": 1.5},
+                  "fill": {"scale": "color", "field": "category"},
+                  "fillOpacity": {"value": 0.15}
+                }
+              }
+            },
+            {
+              "type": "symbol",
+              "from": {"data": "facet"},
+              "encode": {
+                "enter": {
+                  "x": {"signal": "scale('radial', datum.value) * cos(scale('angular', datum.key))"},
+                  "y": {"signal": "scale('radial', datum.value) * sin(scale('angular', datum.key))"},
+                  "size": {"signal": "dotSize"},
+                  "stroke": {"scale": "color", "field": "category"},
+                  "fill": {"scale": "color", "field": "category"},
+                  "tooltip": {"signal": "datum.category + ' — ' + datum.key + ': ' + format(datum.value,'.2f')"}
+                },
+                "hover": {"size": {"value": 80}, "fillOpacity": {"value": 1}},
+                "update": {"cursor": {"value": "pointer"}}
+              }
+            },
+            {
+              "type": "text",
+              "from": {"data": "keys"},
+              "encode": {
+                "enter": {
+                  "x": {"signal": "(radius + 12) * cos(scale('angular', datum.key))"},
+                  "y": {"signal": "(radius + 12) * sin(scale('angular', datum.key))"},
+                  "align": [
+                    {"test": "abs(scale('angular', datum.key)) > PI/2", "value": "right"},
+                    {"value": "left"}
+                  ],
+                  "baseline": [
+                    {"test": "scale('angular', datum.key) > 0", "value": "top"},
+                    {"test": "scale('angular', datum.key) == 0", "value": "middle"},
+                    {"value": "bottom"}
+                  ],
+                  "fontSize": {"value": 11},
+                  "text": {"field": "key"},
+                  "fill": {"value": "#333"}
+                }
+              }
+            },
+            {
+              "type": "text",
+              "encode": {
+                "enter": {
+                  "x": {"signal": "scale('radial', 2) * cos(PI * 1.5)"},
+                  "y": {"signal": "scale('radial', 2) * sin(PI * 1.5) - 5"},
+                  "align": {"value": "center"},
+                  "baseline": {"value": "bottom"},
+                  "fontSize": {"value": 8},
+                  "text": {"value": "2"},
+                  "fill": {"value": "#666"}
+                }
+              }
+            },
+            {
+              "type": "text",
+              "encode": {
+                "enter": {
+                  "x": {"signal": "scale('radial', 4) * cos(PI * 1.5)"},
+                  "y": {"signal": "scale('radial', 4) * sin(PI * 1.5) - 5"},
+                  "align": {"value": "center"},
+                  "baseline": {"value": "bottom"},
+                  "fontSize": {"value": 8},
+                  "text": {"value": "4"},
+                  "fill": {"value": "#666"}
+                }
+              }
+            },
+            {
+              "type": "text",
+              "encode": {
+                "enter": {
+                  "x": {"signal": "scale('radial', 6) * cos(PI * 1.5)"},
+                  "y": {"signal": "scale('radial', 6) * sin(PI * 1.5) - 5"},
+                  "align": {"value": "center"},
+                  "baseline": {"value": "bottom"},
+                  "fontSize": {"value": 8},
+                  "text": {"value": "6"},
+                  "fill": {"value": "#666"}
+                }
+              }
+            },
+            {
+              "type": "text",
+              "encode": {
+                "enter": {
+                  "x": {"signal": "scale('radial', 8) * cos(PI * 1.5)"},
+                  "y": {"signal": "scale('radial', 8) * sin(PI * 1.5) - 5"},
+                  "align": {"value": "center"},
+                  "baseline": {"value": "bottom"},
+                  "fontSize": {"value": 8},
+                  "text": {"value": "8"},
+                  "fill": {"value": "#666"}
+                }
+              }
+            },
+            {
+              "type": "text",
+              "encode": {
+                "enter": {
+                  "x": {"signal": "scale('radial', 10) * cos(PI * 1.5)"},
+                  "y": {"signal": "scale('radial', 10) * sin(PI * 1.5) - 5"},
+                  "align": {"value": "center"},
+                  "baseline": {"value": "bottom"},
+                  "fontSize": {"value": 8},
+                  "text": {"value": "10"},
+                  "fill": {"value": "#666"}
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "encode": {
+            "enter": {
+              "x": {"signal": "radius"},
+              "y": {"value": 14},
+              "align": {"value": "center"},
+              "fontSize": {"value": 16},
+              "fontWeight": {"value": "bold"},
+              "fill": {"value": "#333"},
+              "text": {"signal": "parent.category"}
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
