@@ -6,7 +6,7 @@
   "title": {
     "text": "Global Coffee Trade Flow Network (1990-2019)",
     "subtitle": "Top 10 coffee exporters and importers by total trade volume",
-    "fontSize": 22,
+    "fontSize": 24,
     "fontWeight": 600,
     "anchor": "middle",
     "color": "#2C3E50",
@@ -29,6 +29,10 @@
     },
     {
       "filter": "datum.export_rank <= 10"
+    },
+    {
+      "calculate": "'#' + datum.export_rank + ' ' + datum.Country",
+      "as": "Country_with_rank"
     }
   ],
   "layer": [
@@ -108,7 +112,7 @@
       }
     },
     {
-      "mark": {"type": "text", "fontSize": 13, "fontWeight": 500, "align": "right", "dx": -5},
+      "mark": {"type": "text", "fontSize": 12, "fontWeight": 500, "align": "right", "dx": -5},
       "encoding": {
         "x": {"datum": 1.2, "type": "quantitative"},
         "y": {
@@ -116,7 +120,7 @@
           "type": "quantitative",
           "scale": {"reverse": true}
         },
-        "text": {"field": "Country", "type": "nominal"},
+        "text": {"field": "Country_with_rank", "type": "nominal"},
         "color": {"value": "#000000"}
       }
     },
@@ -135,7 +139,12 @@
           "sort": [{"field": "Total_import_num", "order": "descending"}]
         },
         {
-          "filter": "datum.import_rank <= 10"}
+          "filter": "datum.import_rank <= 10"
+        },
+        {
+          "calculate": "'#' + datum.import_rank + ' ' + datum.Country",
+          "as": "Country_with_rank"
+        }
       ],
       "mark": {"type": "circle", "opacity": 0.9, "stroke": "#FFFFFF", "strokeWidth": 2, "size": 600},
       "encoding": {
@@ -168,9 +177,14 @@
           "sort": [{"field": "Total_import_num", "order": "descending"}]
         },
         {
-          "filter": "datum.import_rank <= 10"}
+          "filter": "datum.import_rank <= 10"
+        },
+        {
+          "calculate": "'#' + datum.import_rank + ' ' + datum.Country",
+          "as": "Country_with_rank"
+        }
       ],
-      "mark": {"type": "text", "fontSize": 13, "fontWeight": 500, "align": "left", "dx": 5},
+      "mark": {"type": "text", "fontSize": 12, "fontWeight": 500, "align": "left", "dx": 5},
       "encoding": {
         "x": {"datum": 7.8, "type": "quantitative"},
         "y": {
@@ -178,12 +192,12 @@
           "type": "quantitative",
           "scale": {"reverse": true}
         },
-        "text": {"field": "Country", "type": "nominal"},
+        "text": {"field": "Country_with_rank", "type": "nominal"},
         "color": {"value": "#000000"}
       }
     },
     {
-      "data": {"values": [{"x": 1.2, "y": 0.3}]},
+      "data": {"values": [{"x": 1.95, "y": 0.1}]},
       "mark": {"type": "point", "shape": "triangle-right", "opacity": 0.8, "size": 1500},
       "encoding": {
         "x": {"field": "x", "type": "quantitative"},
@@ -212,17 +226,17 @@
       }
     },
     {
-      "data": {"values": [{"label": "☕ GLOBAL MARKET", "x": 4.5, "y": 11.0}]},
-      "mark": {"type": "text", "fontSize": 14, "fontWeight": 700},
+      "data": {"values": [{"label": "☕ GLOBAL MARKET", "x": 4.5, "y": 3.5}]},
+      "mark": {"type": "text", "fontSize": 15, "fontWeight": 700},
       "encoding": {
         "x": {"field": "x", "type": "quantitative"},
         "y": {"field": "y", "type": "quantitative"},
         "text": {"field": "label", "type": "nominal"},
-        "color": {"value": "#000000"}
+        "color": {"value": "#34495E"}
       }
     },
     {
-      "data": {"values": [{"x": 7.8, "y": 0.3}]},
+      "data": {"values": [{"x": 7, "y": 0.1}]},
       "mark": {"type": "point", "shape": "triangle-left", "opacity": 0.8, "size": 1500},
       "encoding": {
         "x": {"field": "x", "type": "quantitative"},
@@ -238,6 +252,16 @@
         "y": {"field": "y", "type": "quantitative"},
         "text": {"field": "label", "type": "nominal"},
         "color": {"value": "#000000"}
+      }
+    },
+    {
+      "data": {"values": [{"label": "Line thickness represents trade volume", "x": 4.5, "y": 11.2}]},
+      "mark": {"type": "text", "fontSize": 11, "fontStyle": "italic"},
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "label", "type": "nominal"},
+        "color": {"value": "#7F8C8D"}
       }
     }
   ],

@@ -12,8 +12,7 @@
     "anchor": "middle",
     "fontSize": 20,
     "fontWeight": "bold",
-    "subtitleFontSize": 13,
-    "subtitleColor": "#666",
+    "subtitleFontSize": 14,
     "offset": 10
   },
   
@@ -110,7 +109,7 @@
       "type": "point",
       "domain": ["Natural / Dry", "Washed / Wet", "Semi-washed / Semi-pulped"],
       "range": [0, {"signal": "width"}],
-      "padding": 0.6
+      "padding": -2
     },
     {
       "name": "color",

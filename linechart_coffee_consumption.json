@@ -5,6 +5,7 @@
     "subtitle": "Average per capita consumption trend worldwide",
     "anchor": "middle",
     "fontSize": 24,
+    "subtitleFontSize": 14,
     "fontWeight": "bold"
   },
   "data": {
@@ -16,7 +17,16 @@
     "type": "fit",
     "contains": "padding"
   },
+  "params": [
+    {
+      "name": "countryFilter",
+      "value": null
+    }
+  ],
   "transform": [
+    {
+      "filter": "countryFilter == null || datum.Country == countryFilter"
+    },
     {
       "aggregate": [
         {"op": "mean", "field": "Consumption_Per_Capita_kg", "as": "mean_consumption"}

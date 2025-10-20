@@ -1,13 +1,27 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Global Coffee Production by Country and Type",
+    "subtitle": "Circle size represents total production volume (billion kg)",
+    "anchor": "middle",
+    "fontSize": 24,
+    "subtitleFontSize": 14,
+    "fontWeight": "bold"
+  },
   "width": "container",
-  "height": 600,
+  "height": 750,
   "autosize": {
     "type": "fit",
     "contains": "padding"
   },
   "background": "#FAFAF8",
   "projection": {"type": "equalEarth"},
+  "params": [
+    {
+      "name": "coffeeTypeFilter",
+      "value": null
+    }
+  ],
   "layer": [
     {
       "data": {"sphere": true},
@@ -65,11 +79,12 @@
           "calculate": "datum.Country == 'Brazil' ? -10.3 : datum.Country == 'Viet Nam' ? 14.1 : datum.Country == 'Colombia' ? 4.6 : datum.Country == 'Indonesia' ? -2.5 : datum.Country == 'Ethiopia' ? 9.0 : datum.Country == 'Honduras' ? 14.8 : datum.Country == 'India' ? 22.3 : datum.Country == 'Uganda' ? 1.4 : datum.Country == 'Mexico' ? 23.6 : datum.Country == 'Guatemala' ? 15.8 : datum.Country == 'Peru' ? -9.2 : datum.Country == 'Nicaragua' ? 12.9 : datum.Country == 'Kenya' ? 0.2 : datum.Country == 'Costa Rica' ? 10.0 : datum.Country == 'Papua New Guinea' ? -6.3 : datum.Country == 'Tanzania' ? -6.4 : datum.Country == 'El Salvador' ? 13.8 : datum.Country == 'Cameroon' ? 5.7 : datum.Country == 'Lao People\\'s Democratic Republic' ? 18.2 : datum.Country == 'Ecuador' ? -1.8 : datum.Country == 'Thailand' ? 15.9 : datum.Country == 'Venezuela' ? 6.4 : datum.Country == 'Democratic Republic of Congo' ? -2.9 : datum.Country == 'Madagascar' ? -18.9 : datum.Country == 'Côte d\\'Ivoire' ? 7.5 : datum.Country == 'Burundi' ? -3.4 : datum.Country == 'Philippines' ? 12.9 : datum.Country == 'Rwanda' ? -1.9 : datum.Country == 'Haiti' ? 18.9 : datum.Country == 'Dominican Republic' ? 18.7 : datum.Country == 'Guinea' ? 9.9 : datum.Country == 'Cuba' ? 21.5 : datum.Country == 'Angola' ? -11.2 : datum.Country == 'Panama' ? 8.5 : datum.Country == 'Jamaica' ? 18.1 : datum.Country == 'Bolivia (Plurinational State of)' ? -16.3 : datum.Country == 'Togo' ? 8.6 : datum.Country == 'Sri Lanka' ? 7.9 : datum.Country == 'Paraguay' ? -23.4 : datum.Country == 'Sierra Leone' ? 8.5 : datum.Country == 'Malawi' ? -13.3 : datum.Country == 'Central African Republic' ? 6.6 : datum.Country == 'Zimbabwe' ? -19.0 : datum.Country == 'Zambia' ? -13.1 : datum.Country == 'Ghana' ? 7.9 : datum.Country == 'Timor-Leste' ? -8.6 : datum.Country == 'Liberia' ? 6.4 : datum.Country == 'Congo' ? -0.2 : datum.Country == 'Nigeria' ? 9.1 : datum.Country == 'Trinidad & Tobago' ? 10.7 : datum.Country == 'Guyana' ? 4.9 : datum.Country == 'Equatorial Guinea' ? 1.7 : datum.Country == 'Gabon' ? -0.8 : datum.Country == 'Nepal' ? 28.4 : datum.Country == 'Yemen' ? 15.6 : null",
           "as": "lat"
         },
-        {"filter": "datum.lon != null && datum.lat != null"}
+        {"filter": "datum.lon != null && datum.lat != null"},
+        {"filter": "coffeeTypeFilter == null || datum.Coffee_Type_Normalized == coffeeTypeFilter"}
       ],
       "mark": {
         "type": "circle",
-        "opacity": 0.85,
+        "opacity": 0.5,
         "stroke": "#000",
         "strokeWidth": 1
       },
@@ -82,10 +97,10 @@
           "title": "Production (billion kg)",
           "scale": {"type": "sqrt", "domain": [0, 80], "range": [50, 3000]},
           "legend": {
-            "orient": "right",
+            "orient": "bottom",
             "format": ".1f",
-            "titleFontSize": 14,
-            "labelFontSize": 12
+            "titleFontSize": 12,
+            "labelFontSize": 11
           }
         },
         "color": {
@@ -97,9 +112,9 @@
             "range": ["#FFD700", "#377EB8", "#4DAF4A"]
           },
           "legend": {
-            "orient": "right",
+            "orient": "bottom",
             "titleFontSize": 12,
-            "labelFontSize": 10
+            "labelFontSize": 11
           }
         },
         "tooltip": [
@@ -108,6 +123,90 @@
           {"field": "Production_Billions", "title": "Production (billion kg)", "format": ".2f"},
           {"field": "Total_production", "title": "Total (kg)", "format": ","}
         ]
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {"Country": "Brazil", "lon": -47.9, "lat": -10.3, "rank": "#1", "production": "69.3B kg", "text_lon": -10, "text_lat": -45},
+          {"Country": "Viet Nam", "lon": 108.3, "lat": 14.1, "rank": "#2", "production": "29.1B kg", "text_lon": 150, "text_lat": 30},
+          {"Country": "Colombia", "lon": -74.3, "lat": 4.6, "rank": "#3", "production": "13.5B kg", "text_lon": -105, "text_lat": 35}
+        ]
+      },
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 1.5,
+        "color": "#000000",
+        "opacity": 0.7
+      },
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "longitude2": {"field": "text_lon"},
+        "latitude2": {"field": "text_lat"}
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {"Country": "Brazil", "lon": -47.9, "lat": -10.3, "rank": "#1", "production": "69.3B kg", "text_lon": -10, "text_lat": -45},
+          {"Country": "Viet Nam", "lon": 108.3, "lat": 14.1, "rank": "#2", "production": "29.1B kg", "text_lon": 150, "text_lat": 30},
+          {"Country": "Colombia", "lon": -74.3, "lat": 4.6, "rank": "#3", "production": "13.5B kg", "text_lon": -105, "text_lat": 35}
+        ]
+      },
+      "mark": {
+        "type": "point",
+        "size": 100,
+        "fill": "#FFFFFF",
+        "stroke": "#000000",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "longitude": {"field": "text_lon", "type": "quantitative"},
+        "latitude": {"field": "text_lat", "type": "quantitative"}
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {"Country": "Brazil", "lon": -47.9, "lat": -10.3, "rank": "#1", "production": "69.3B kg", "text_lon": -10, "text_lat": -55, "label": "#1 Brazil"},
+          {"Country": "Viet Nam", "lon": 108.3, "lat": 14.1, "rank": "#2", "production": "29.1B kg", "text_lon": 150, "text_lat": 30, "label": "#2 Viet Nam"},
+          {"Country": "Colombia", "lon": -74.3, "lat": 4.6, "rank": "#3", "production": "13.5B kg", "text_lon": -105, "text_lat": 35, "label": "#3 Colombia"}
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "dy": -20,
+        "color": "#000000",
+        "align": "center"
+      },
+      "encoding": {
+        "longitude": {"field": "text_lon", "type": "quantitative"},
+        "latitude": {"field": "text_lat", "type": "quantitative"},
+        "text": {"field": "label", "type": "nominal"}
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {"Country": "Brazil", "lon": -47.9, "lat": -10.3, "rank": "#1", "production": "69.3B kg", "text_lon": -10, "text_lat": -55},
+          {"Country": "Viet Nam", "lon": 108.3, "lat": 14.1, "rank": "#2", "production": "29.1B kg", "text_lon": 150, "text_lat": 30},
+          {"Country": "Colombia", "lon": -74.3, "lat": 4.6, "rank": "#3", "production": "13.5B kg", "text_lon": -105, "text_lat": 35}
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "dy": -10,
+        "color": "#000000",
+        "align": "center"
+      },
+      "encoding": {
+        "longitude": {"field": "text_lon", "type": "quantitative"},
+        "latitude": {"field": "text_lat", "type": "quantitative"},
+        "text": {"field": "production", "type": "nominal"}
       }
     }
   ],

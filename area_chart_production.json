@@ -4,80 +4,126 @@
   "height": 500,
   "title": {
     "text": "Top 5 Coffee Producers Over Time (1990-2020)",
-    "fontSize": 26,
+    "subtitleFontSize": 14,
+    "fontSize": 24,
     "anchor": "start",
     "color": "#333"
   },
   "data": {
     "url": "Coffee_production.csv"
   },
-  "transform": [
+  "layer": [
     {
-      "filter": "indexof(['Brazil', 'Viet Nam', 'Colombia', 'Indonesia', 'Ethiopia'], datum.Country) >= 0"
-    },
-    {
-      "fold": [
-        "1990/91", "1991/92", "1992/93", "1993/94", "1994/95",
-        "1995/96", "1996/97", "1997/98", "1998/99", "1999/00",
-        "2000/01", "2001/02", "2002/03", "2003/04", "2004/05",
-        "2005/06", "2006/07", "2007/08", "2008/09", "2009/10",
-        "2010/11", "2011/12", "2012/13", "2013/14", "2014/15",
-        "2015/16", "2016/17", "2017/18", "2018/19", "2019/20"
+      "transform": [
+        {
+          "filter": "indexof(['Brazil', 'Viet Nam', 'Colombia', 'Indonesia', 'Ethiopia'], datum.Country) >= 0"
+        },
+        {
+          "fold": [
+            "1990/91", "1991/92", "1992/93", "1993/94", "1994/95",
+            "1995/96", "1996/97", "1997/98", "1998/99", "1999/00",
+            "2000/01", "2001/02", "2002/03", "2003/04", "2004/05",
+            "2005/06", "2006/07", "2007/08", "2008/09", "2009/10",
+            "2010/11", "2011/12", "2012/13", "2013/14", "2014/15",
+            "2015/16", "2016/17", "2017/18", "2018/19", "2019/20"
+          ],
+          "as": ["Year", "Production"]
+        },
+        {
+          "calculate": "toNumber(split(datum.Year, '/')[0])",
+          "as": "YearNum"
+        },
+        {
+          "calculate": "datum.Production / 1000000000",
+          "as": "ProductionBillions"
+        },
+        {
+          "filter": "datum.ProductionBillions > 0 && isValid(datum.ProductionBillions)"
+        }
       ],
-      "as": ["Year", "Production"]
-    },
-    {
-      "calculate": "toNumber(split(datum.Year, '/')[0])",
-      "as": "YearNum"
-    },
-    {
-      "calculate": "datum.Production / 1000000000",
-      "as": "ProductionBillions"
-    },
-    {
-      "filter": "datum.ProductionBillions > 0 && isValid(datum.ProductionBillions)"
-    }
-  ],
-  "mark": {
-    "type": "area",
-    "line": true,
-    "point": false,
-    "opacity": 0.8
-  },
-  "encoding": {
-    "x": {
-      "field": "YearNum",
-      "type": "quantitative",
-      "title": "Year",
-      "scale": {"domain": [1990, 2020]},
-      "axis": {"format": "d", "tickCount": 10}
-    },
-    "y": {
-      "field": "ProductionBillions",
-      "type": "quantitative",
-      "title": "Production (Billion kg)",
-      "stack": "zero"
-    },
-    "color": {
-      "field": "Country",
-      "type": "nominal",
-      "title": "Country",
-      "scale": {
-        "domain": ["Brazil", "Viet Nam", "Colombia", "Indonesia", "Ethiopia"],
-        "range": ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#D55E00"]
+      "mark": {
+        "type": "area",
+        "line": true,
+        "point": false,
+        "opacity": 0.8
       },
-      "legend": {
-        "orient": "right",
-        "direction": "vertical"
+      "encoding": {
+        "x": {
+          "field": "YearNum",
+          "type": "quantitative",
+          "title": "Year",
+          "scale": {"domain": [1990, 2020]},
+          "axis": {"format": "d", "tickCount": 10}
+        },
+        "y": {
+          "field": "ProductionBillions",
+          "type": "quantitative",
+          "title": "Production (Billion kg)",
+          "stack": "zero"
+        },
+        "color": {
+          "field": "Country",
+          "type": "nominal",
+          "title": "Country",
+          "scale": {
+            "domain": ["Brazil", "Viet Nam", "Colombia", "Indonesia", "Ethiopia"],
+            "range": ["#0173B2", "#ECB01F", "#56B4E9", "#994F00", "#CC79A7"]
+          },
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "titleFontSize": 12,
+            "labelFontSize": 11
+          }
+        },
+        "tooltip": [
+          {"field": "Country", "title": "Country"},
+          {"field": "YearNum", "title": "Year"},
+          {"field": "ProductionBillions", "title": "Production (Billion kg)", "format": ".2f"},
+          {"field": "Coffee type", "title": "Coffee Type"}
+        ]
       }
     },
-    "tooltip": [
-      {"field": "Country", "title": "Country"},
-      {"field": "YearNum", "title": "Year"},
-      {"field": "ProductionBillions", "title": "Production (Billion kg)", "format": ".2f"},
-      {"field": "Coffee type", "title": "Coffee Type"}
-    ]
-  },
+    {
+      "data": {
+        "values": [
+          {"x1": 2008, "y1": 4.0, "x2": 2004, "y2": 6.2}
+        ]
+      },
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 2,
+        "color": "#000000",
+        "strokeDash": [4, 4]
+      },
+      "encoding": {
+        "x": {"field": "x1", "type": "quantitative"},
+        "y": {"field": "y1", "type": "quantitative"},
+        "x2": {"field": "x2"},
+        "y2": {"field": "y2"}
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {"x": 1999, "y": 6.5, "text": "Brazil: World's largest coffee producer"}
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#2C3E50",
+        "align": "left",
+        "dx": 5
+      },
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "text", "type": "nominal"}
+      }
+    }
+  ],
   "config": {
     "view": {"stroke": null},
     "area": {"interpolate": "monotone"}

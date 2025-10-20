@@ -16,7 +16,7 @@
   "layer": [
     {
       "data": {
-        "url": "https://raw.githubusercontent.com/Ng-Jun-Xian/3179-A2/main/Coffee_consumption_per_capita.csv"
+        "url": "Coffee_consumption_per_capita.csv"
       },
       "transform": [
         {"filter": "datum.Year >= 1990 && datum.Year <= 2019"},
@@ -67,7 +67,7 @@
     },
     {
       "data": {
-        "url": "https://raw.githubusercontent.com/Ng-Jun-Xian/3179-A2/main/Coffee_consumption_per_capita.csv"
+        "url": "Coffee_consumption_per_capita.csv"
       },
       "transform": [
         {"filter": "datum.Year >= 1990 && datum.Year <= 2019"},
@@ -90,13 +90,12 @@
       },
       "encoding": {
         "x": {"field": "Year", "type": "ordinal", "axis": null},
-        "y": {"field": "avg_coffee", "type": "quantitative", "axis": null},
-        "text": {"field": "avg_coffee", "type": "quantitative", "format": ".2f"}
+        "y": {"field": "avg_coffee", "type": "quantitative", "axis": null}      
       }
     },
     {
       "data": {
-        "url": "https://raw.githubusercontent.com/Ng-Jun-Xian/3179-A2/main/cardiovascular-disease-death-rate-crude-versus-age-standardized.csv"
+        "url": "cardiovascular-disease-death-rate-crude-versus-age-standardized.csv"
       },
       "transform": [
         {"filter": "datum.Year >= 1990 && datum.Year <= 2019"},
@@ -164,8 +163,7 @@
       },
       "encoding": {
         "x": {"field": "Year", "type": "quantitative", "axis": null},
-        "y": {"field": "avg_cvd", "type": "quantitative", "axis": null},
-        "text": {"field": "avg_cvd", "type": "quantitative", "format": ".1f"}
+        "y": {"field": "avg_cvd", "type": "quantitative", "axis": null}
       }
     },
     {
@@ -176,7 +174,7 @@
         "fontSize": 12,
         "fontWeight": "bold",
         "color": "#8B4513",
-        "dx": -280,
+        "dx": 280,
         "dy": -220
       },
       "encoding": {
@@ -191,7 +189,7 @@
         "fontSize": 12,
         "fontWeight": "bold",
         "color": "#C13838",
-        "dx": 280,
+        "dx": -280,
         "dy": -220
       },
       "encoding": {
@@ -202,14 +200,30 @@
       "data": {"values": [{}]},
       "mark": {
         "type": "text",
-        "align": "right",
-        "fontSize": 10,
-        "fontStyle": "italic",
-        "dx": 545,
-        "dy": 240
+        "align": "center",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#000000",
+        "dx": 350,
+        "dy": -120
       },
       "encoding": {
-        "text": {"value": "Data filtered for years 1990-2019 only"}
+        "text": {"value": "Coffee Consumption gradually increased from 2003 to 2019"}
+      }
+    },
+    {
+      "data": {"values": [{}]},
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#000000",
+        "dx": 400,
+        "dy": 20
+      },
+      "encoding": {
+        "text": {"value": "CVD Deaths steadily decreased from 2003 to 2019"}
       }
     }
   ],

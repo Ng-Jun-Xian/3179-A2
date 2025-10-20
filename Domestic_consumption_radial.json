@@ -4,7 +4,8 @@
     "text": "Coffee Consumption by Type - Radial View (2019)",
     "subtitle": "Domestic Producers Only - Each arc segment represents a country's consumption",
     "anchor": "middle",
-    "fontSize": 24
+    "fontSize": 24,
+    "subtitleFontSize": 14
   },
   "data": {
     "url": "Coffee_consumption_per_capita.csv"
@@ -44,7 +45,13 @@
        "domain": ["Arabica", "Robusta", "Arabica/Robusta"],
        "range": ["#FFD700", "#377EB8", "#4DAF4A"]
       },
-      "legend": {"title": "Coffee Type (Domestic)"}
+      "legend": {
+        "title": "Coffee Type (Domestic)",
+        "orient": "bottom",
+        "direction": "horizontal",
+        "titleFontSize": 12,
+        "labelFontSize": 11
+    }
     },
     "tooltip": [
       {"field": "Country", "type": "nominal"},
