@@ -15,7 +15,15 @@
     {
       "transform": [
         {
-          "filter": "indexof(['Brazil', 'Vietnam', 'Colombia', 'Indonesia', 'India'], datum.Country) >= 0"
+          "calculate": "toNumber(datum.Total_export)",
+          "as": "Total_export_num"
+        },
+        {
+          "window": [{"op": "rank", "as": "rank"}],
+          "sort": [{"field": "Total_export_num", "order": "descending"}]
+        },
+        {
+          "filter": "datum.rank <= 5"
         },
         {
           "fold": ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"],
@@ -60,8 +68,7 @@
           "field": "Country",
           "type": "nominal",
           "scale": {
-            "domain": ["Brazil", "Vietnam", "Colombia", "Indonesia", "India"],
-            "range": ["#0173B2", "#ECB01F", "#56B4E9", "#CC79A7", "#994F00"]
+            "scheme": "category10"
           },
           "legend": {
             "title": "Country",
@@ -74,7 +81,8 @@
         "tooltip": [
           {"field": "Country", "title": "Country"},
           {"field": "Year", "title": "Year"},
-          {"field": "Exports_Billions", "title": "Exports (Billion kg)", "format": ".2f"}
+          {"field": "Exports_Billions", "title": "Exports (Billion kg)", "format": ".2f"},
+          {"field": "rank", "title": "Overall Rank"}
         ]
       }
     },
@@ -102,6 +110,6 @@
   ],
   "config": {
     "view": {"stroke": null},
-    "font": "Inter, system-ui, sans-serif"
+    "font": "Inter, system-ui, -apple-system, sans-serif"
   }
 }
