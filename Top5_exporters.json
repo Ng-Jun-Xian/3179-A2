@@ -68,7 +68,7 @@
           "field": "Country",
           "type": "nominal",
           "scale": {
-            "scheme": "category10"
+            "range": ["#2E86AB", "#A23B72", "#F18F01", "#006BA6", "#C73E1D"]
           },
           "legend": {
             "title": "Country",
